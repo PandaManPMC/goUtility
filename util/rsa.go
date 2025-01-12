@@ -7,6 +7,7 @@ import (
 	"crypto/rsa"
 	"crypto/sha256"
 	"crypto/x509"
+	"encoding/base64"
 	"encoding/pem"
 	"errors"
 )
@@ -33,8 +34,32 @@ func (that *RSA) GenRsaKey1024() (prvKey, pubKey []byte, err error) {
 	return that.GenRsaKey(RSA1024)
 }
 
+func (that *RSA) GenRsaKey1024ToBase64() (prvKey, pubKey string, err error) {
+	prvKeyB, pubKeyB, err := that.GenRsaKey(RSA1024)
+	if nil != err {
+		return "", "", err
+	}
+	prvKey = base64.URLEncoding.EncodeToString(prvKeyB)
+	pubKey = base64.URLEncoding.EncodeToString(pubKeyB)
+	return
+}
+
 func (that *RSA) GenRsaKey2048() (prvKey, pubKey []byte, err error) {
 	return that.GenRsaKey(RSA2048)
+}
+
+func (that *RSA) GenRsaKey2048ToBase64() (prvKey, pubKey string, err error) {
+	prvKeyB, pubKeyB, err := that.GenRsaKey(RSA2048)
+	if nil != err {
+		return "", "", err
+	}
+	prvKey = base64.URLEncoding.EncodeToString(prvKeyB)
+	pubKey = base64.URLEncoding.EncodeToString(pubKeyB)
+	return
+}
+
+func DecodeBase64(base64Str string) ([]byte, error) {
+	return base64.URLEncoding.DecodeString(base64Str)
 }
 
 // GenRsaKey	RSA公钥私钥产生

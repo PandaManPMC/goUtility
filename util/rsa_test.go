@@ -159,8 +159,8 @@ func TestRSA1024(t *testing.T) {
 	rsa := NewRSA(RSAPemPKCS8)
 	//rsa 密钥文件产生
 	fmt.Println("-------------------------------获取RSA公私钥-----------------------------------------")
-	//prvKey, pubKey, err1 := rsa.GenRsaKey1024()
-	prvKey, pubKey, err1 := rsa.GenRsaKey2048()
+	prvKey, pubKey, err1 := rsa.GenRsaKey1024()
+	//prvKey, pubKey, err1 := rsa.GenRsaKey2048()
 	if nil != err1 {
 		t.Fatal(err1)
 	}
@@ -170,11 +170,15 @@ func TestRSA1024(t *testing.T) {
 	fmt.Println(string(pubKey))
 	println("------------------------------")
 
-	fmt.Println(base64.URLEncoding.EncodeToString(prvKey))
-	fmt.Println(base64.URLEncoding.EncodeToString(pubKey))
+	prvKeys := base64.URLEncoding.EncodeToString(prvKey)
+	fmt.Println(prvKeys)
+	fmt.Println(len(prvKeys))
+	pubKeys := base64.URLEncoding.EncodeToString(pubKey)
+	fmt.Println(pubKeys)
+	fmt.Println(len(pubKeys))
 
-	buf, _ := base64.URLEncoding.DecodeString(base64.URLEncoding.EncodeToString(prvKey))
-	fmt.Println(string(buf))
+	prvKey, _ = base64.URLEncoding.DecodeString(prvKeys)
+	fmt.Println(string(prvKey))
 
 	fmt.Println("-------------------------------进行签名与验证操作-----------------------------------------")
 	var data = "卧了个槽，这么神奇的吗？？！！！  ԅ(¯﹃¯ԅ) ！！！！！！）"
