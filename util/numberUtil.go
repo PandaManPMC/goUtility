@@ -52,6 +52,11 @@ func (instance *numberUtil) EfficientFloatToStringBy8(fl big.Float) string {
 	return instance.EfficientFloatToPrecisionString(fl, 8)
 }
 
+// EfficientFloatToStringBy10 最多保留 10 位有效小数点位
+func (instance *numberUtil) EfficientFloatToStringBy10(fl big.Float) string {
+	return instance.EfficientFloatToPrecisionString(fl, 10)
+}
+
 // EfficientFloatToStringBy2 最多保留 2 位有效小数点位
 func (instance *numberUtil) EfficientFloatToStringBy2(fl big.Float) string {
 	return instance.EfficientFloatToPrecisionString(fl, 2)
