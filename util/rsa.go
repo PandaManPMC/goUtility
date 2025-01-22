@@ -30,6 +30,14 @@ func NewRSA(pemModel RSAPemPKCSModel) *RSA {
 	return &RSA{PKCSModel: pemModel}
 }
 
+func NewRSAPemPKCS1() *RSA {
+	return &RSA{PKCSModel: RSAPemPKCS1}
+}
+
+func NewRSAPemPKCS8() *RSA {
+	return &RSA{PKCSModel: RSAPemPKCS8}
+}
+
 func (that *RSA) GenRsaKey1024() (prvKey, pubKey []byte, err error) {
 	return that.GenRsaKey(RSA1024)
 }
