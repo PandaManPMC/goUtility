@@ -249,3 +249,11 @@ func (that *judgeUtil) JoinStringsInASCII(data map[string]string, sep string, on
 	}
 	return strings.Join(list, sep)
 }
+
+// GetMaxLenStr 最长的字符串 str[:length] 如果 str 不足 length 则返回 str
+func (that *judgeUtil) GetMaxLenStr(str string, length int) string {
+	if len(str) > length {
+		return str[:length]
+	}
+	return str
+}

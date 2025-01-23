@@ -66,10 +66,6 @@ func (that *RSA) GenRsaKey2048ToBase64() (prvKey, pubKey string, err error) {
 	return
 }
 
-func DecodeBase64(base64Str string) ([]byte, error) {
-	return base64.URLEncoding.DecodeString(base64Str)
-}
-
 // GenRsaKey	RSA公钥私钥产生
 func (that *RSA) GenRsaKey(bits RSABits) (prvKey, pubKey []byte, err error) {
 	// 生成私钥文件
