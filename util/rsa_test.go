@@ -155,6 +155,15 @@ func TestRsaSignMd5(t *testing.T) {
 
 }
 
+func TestGenRsaKey(t *testing.T) {
+	prvKey, pubKey, err := NewRSAPemPKCS8().GenRsaKey1024ToBase64()
+	if nil != err {
+		t.Fatal(err)
+	}
+	t.Log(prvKey)
+	t.Log(pubKey)
+}
+
 func TestRSA1024(t *testing.T) {
 	rsa := NewRSA(RSAPemPKCS8)
 	//rsa 密钥文件产生
@@ -196,6 +205,65 @@ func TestRSA1024(t *testing.T) {
 	signData2, _ := hex.DecodeString(hex.EncodeToString(signData))
 
 	isOk, err3 := rsa.RsaVerySignWithSha256([]byte(data), signData2, pubKey)
+	if nil != err3 {
+		t.Fatal(err3)
+	}
+	if isOk {
+		fmt.Println("签名信息验证成功，确定是正确私钥签名！！")
+	}
+
+	fmt.Println("-------------------------------进行加密解密操作-----------------------------------------")
+	ciphertext, err4 := rsa.RsaEncrypt([]byte(data), pubKey)
+	if nil != err4 {
+		t.Fatal(err4)
+	}
+	fmt.Println("公钥加密后的数据：", hex.EncodeToString(ciphertext))
+	sourceData := rsa.RsaDecrypt(ciphertext, prvKey)
+	fmt.Println("私钥解密后的数据：", string(sourceData))
+}
+
+func TestRSA1024MD5(t *testing.T) {
+	rsa := NewRSA(RSAPemPKCS8)
+	//rsa 密钥文件产生
+	fmt.Println("-------------------------------获取RSA公私钥-----------------------------------------")
+	prvKey, pubKey, err1 := rsa.GenRsaKey1024()
+	//prvKey, pubKey, err1 := rsa.GenRsaKey2048()
+	if nil != err1 {
+		t.Fatal(err1)
+	}
+	println("私钥------------------------------")
+	fmt.Println(string(prvKey))
+	println("公钥------------------------------")
+	fmt.Println(string(pubKey))
+	println("------------------------------")
+
+	prvKeys := base64.URLEncoding.EncodeToString(prvKey)
+	fmt.Println(prvKeys)
+	fmt.Println(len(prvKeys))
+	pubKeys := base64.URLEncoding.EncodeToString(pubKey)
+	fmt.Println(pubKeys)
+	fmt.Println(len(pubKeys))
+
+	prvKey, _ = base64.URLEncoding.DecodeString(prvKeys)
+	fmt.Println(string(prvKey))
+
+	fmt.Println("-------------------------------进行签名与验证操作-----------------------------------------")
+	var data = "卧了个槽，这么神奇的吗？？！！！  ԅ(¯﹃¯ԅ) ！！！！！！）"
+	fmt.Println("对消息进行签名操作...")
+	signData, err2 := rsa.RsaSignWithMD5([]byte(data), prvKey)
+	if nil != err2 {
+		t.Fatal(err2)
+	}
+
+	t.Log(string(signData))
+	fmt.Println(fmt.Sprintf("base64.URLEncoding=%s", base64.URLEncoding.EncodeToString(signData)))
+	t.Log(fmt.Sprintf("消息的签名信息： %s", hex.EncodeToString(signData)))
+	fmt.Println("\n对签名信息进行验证...")
+
+	signData2, _ := hex.DecodeString(hex.EncodeToString(signData))
+	//signData2, _ := base64.StdEncoding.DecodeString(base64.StdEncoding)
+
+	isOk, err3 := rsa.RsaVerySignWithMD5([]byte(data), signData2, pubKey)
 	if nil != err3 {
 		t.Fatal(err3)
 	}

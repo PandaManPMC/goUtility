@@ -47,8 +47,8 @@ func (that *RSA) GenRsaKey1024ToBase64() (prvKey, pubKey string, err error) {
 	if nil != err {
 		return "", "", err
 	}
-	prvKey = base64.URLEncoding.EncodeToString(prvKeyB)
-	pubKey = base64.URLEncoding.EncodeToString(pubKeyB)
+	prvKey = base64.StdEncoding.EncodeToString(prvKeyB)
+	pubKey = base64.StdEncoding.EncodeToString(pubKeyB)
 	return
 }
 
@@ -61,8 +61,8 @@ func (that *RSA) GenRsaKey2048ToBase64() (prvKey, pubKey string, err error) {
 	if nil != err {
 		return "", "", err
 	}
-	prvKey = base64.URLEncoding.EncodeToString(prvKeyB)
-	pubKey = base64.URLEncoding.EncodeToString(pubKeyB)
+	prvKey = base64.StdEncoding.EncodeToString(prvKeyB)
+	pubKey = base64.StdEncoding.EncodeToString(pubKeyB)
 	return
 }
 
