@@ -4,6 +4,7 @@ import (
 	"crypto/ecdsa"
 	"encoding/hex"
 	"fmt"
+	"goUtility/util"
 	"golang.org/x/crypto/sha3"
 )
 
@@ -22,4 +23,19 @@ func PubKeyToAddressETH(publicKey ecdsa.PublicKey) string {
 
 func PrivateKeyToAddressETH(privateKey *ecdsa.PrivateKey) string {
 	return PubKeyToAddressETH(privateKey.PublicKey)
+}
+
+func ImportWallet(mnemonic string, index int) (privateKey *ecdsa.PrivateKey, address string, err error) {
+	wallet, err := util.GetInstanceByHDWalletUtil().ImportWalletFromMnemonic(mnemonic)
+	if nil != err {
+		return nil, "", fmt.Errorf("failed to import mnemonic: %v", err)
+	}
+
+	privateKey, err = util.GetInstanceByHDWalletUtil().WalletPrivateKey(wallet, index)
+	if nil != err {
+		return nil, "", fmt.Errorf("failed to WalletPrivateKey: %v", err)
+	}
+
+	address = PrivateKeyToAddressETH(privateKey)
+	return
 }
