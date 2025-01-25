@@ -1,6 +1,8 @@
 package tronWal
 
 import (
+	"encoding/hex"
+	"fmt"
 	"goUtility/util"
 	"testing"
 )
@@ -92,4 +94,24 @@ func TestMnemonic2(t *testing.T) {
 
 	addr = PriKeyToAddressTron(l_pri)
 	t.Log(addr)
+}
+
+func TestTronAddressToHex(t *testing.T) {
+	// Tron 地址
+	address := "TVTV9aEDdszTNYayNBdjpQ7xfXH3DMyzXq"
+	d, err := DecodeCheck(address)
+	if nil != err {
+		t.Fatal(err)
+	}
+	h := hex.EncodeToString(d)
+	t.Log(h)
+
+	// 转为 Hex
+	hexAddress, err := HexAddressPadded64(address)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
+	fmt.Println("Hex 地址:", hexAddress)
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/btcsuite/btcutil/base58"
 	"github.com/ethereum/go-ethereum/crypto"
 	"goUtility/util"
+	"strings"
 )
 
 func PubKeyToAddressTron(pubKey ecdsa.PublicKey) string {
@@ -80,6 +81,25 @@ func HexToTronAddress(hexAddress string) (string, error) {
 		return "", e
 	}
 	return EncodeCheck(b), nil
+}
+
+func TronAddressToHex(address string) (string, error) {
+	decoded, err := DecodeCheck(address)
+	if nil != err {
+		return "", err
+	}
+	hexString := hex.EncodeToString(decoded)
+	return hexString, nil
+}
+
+func HexAddressPadded64(address string) (string, error) {
+	hexString, err := TronAddressToHex(address)
+	if nil != err {
+		return "", err
+	}
+	// 左侧补零到 64 位长度
+	paddedHex := strings.Repeat("0", 64-len(hexString)) + hexString
+	return paddedHex, nil
 }
 
 func TronAddressByPrivateKey(privateKey *ecdsa.PrivateKey) string {
