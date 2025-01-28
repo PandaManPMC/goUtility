@@ -231,6 +231,7 @@ func (*numberUtil) IsNegativeFloat(val string) bool {
 	return req.MatchString(val)
 }
 
+// HexToInt 十六进制转十进制
 func (*numberUtil) HexToInt(hex string) (int64, error) {
 	// 去掉前缀 "0x"
 	if len(hex) > 2 && hex[:2] == "0x" {
@@ -243,4 +244,10 @@ func (*numberUtil) HexToInt(hex string) (int64, error) {
 		return 0, err
 	}
 	return val, nil
+}
+
+// IntToHex0x 十进制转十六进制字符串0x
+func (*numberUtil) IntToHex0x(val int64) string {
+	hexStr := strconv.FormatInt(val, 16)
+	return "0x" + hexStr
 }
