@@ -230,3 +230,17 @@ func (*numberUtil) IsNegativeFloat(val string) bool {
 	req := regexp.MustCompile(`^-\d+\.\d+$`)
 	return req.MatchString(val)
 }
+
+func (*numberUtil) HexToInt(hex string) (int64, error) {
+	// 去掉前缀 "0x"
+	if len(hex) > 2 && hex[:2] == "0x" {
+		hex = hex[2:]
+	}
+
+	// 转换为十进制
+	val, err := strconv.ParseInt(hex, 16, 64)
+	if nil != err {
+		return 0, err
+	}
+	return val, nil
+}
