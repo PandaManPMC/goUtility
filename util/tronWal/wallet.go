@@ -8,6 +8,7 @@ import (
 	"github.com/btcsuite/btcutil/base58"
 	"github.com/ethereum/go-ethereum/crypto"
 	"goUtility/util"
+	"strconv"
 	"strings"
 )
 
@@ -100,6 +101,12 @@ func HexAddressPadded64(address string) (string, error) {
 	// 左侧补零到 64 位长度
 	paddedHex := strings.Repeat("0", 64-len(hexString)) + hexString
 	return paddedHex, nil
+}
+
+func IntToHexPadded64(params int64) string {
+	hexStr := strconv.FormatInt(params, 16)
+	paddedHex := strings.Repeat("0", 64-len(hexStr)) + hexStr
+	return paddedHex
 }
 
 func TronAddressByPrivateKey(privateKey *ecdsa.PrivateKey) string {

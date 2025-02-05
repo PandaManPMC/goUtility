@@ -1,8 +1,11 @@
 package util
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
 	"github.com/mssola/useragent"
+	"io"
 	"net/http"
 	"strings"
 )
@@ -118,4 +121,41 @@ func (*httpUtil) UserAgentInfo(userAgent string) UserAgentInfo {
 	name, version = ua.Browser()
 	info.DeviceBrowser = fmt.Sprintf("%s_%s", name, version)
 	return *info
+}
+
+func (*httpUtil) Post(url string, data []byte, header map[string]string) ([]byte, error) {
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(data))
+	if nil != err {
+		return nil, err
+	}
+
+	if nil == header || 0 == len(header) {
+		req.Header.Set("Content-Type", "application/json")
+	} else {
+		if _, isOk := header["Content-Type"]; !isOk {
+			req.Header.Set("Content-Type", "application/json")
+		}
+		for k, v := range header {
+			req.Header.Set(k, v)
+		}
+	}
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if nil != err {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if nil != err {
+		return nil, err
+	}
+
+	if http.StatusOK != resp.StatusCode {
+		return nil, errors.New(fmt.Sprintf("StatusCode=%d", resp.StatusCode))
+	}
+
+	return body, nil
 }
