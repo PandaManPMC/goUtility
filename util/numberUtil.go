@@ -232,18 +232,16 @@ func (*numberUtil) IsNegativeFloat(val string) bool {
 }
 
 // HexToInt 十六进制转十进制
-func (*numberUtil) HexToInt(hex string) (int64, error) {
+func (*numberUtil) HexToInt(hex string) string {
 	// 去掉前缀 "0x"
 	if len(hex) > 2 && hex[:2] == "0x" {
 		hex = hex[2:]
 	}
 
 	// 转换为十进制
-	val, err := strconv.ParseInt(hex, 16, 64)
-	if nil != err {
-		return 0, err
-	}
-	return val, nil
+	num := new(big.Int)
+	num.SetString(hex, 16)
+	return num.String()
 }
 
 // IntToHex0x 十进制转十六进制字符串0x
