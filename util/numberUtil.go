@@ -249,3 +249,9 @@ func (*numberUtil) IntToHex0x(val int64) string {
 	hexStr := strconv.FormatInt(val, 16)
 	return "0x" + hexStr
 }
+
+// ParseIntMust 屏蔽错误
+func (*numberUtil) ParseIntMust(val string) int {
+	v, _ := strconv.Atoi(val)
+	return v
+}
