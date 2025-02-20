@@ -83,7 +83,7 @@ func (instance *numberUtil) EfficientFloatToStringBy2FormatZero(fl big.Float) st
 //	return instance.EfficientFloatToPrecisionString(fl, 4)
 //}
 
-// EfficientFloatToFloatBy4 最多保留 4 位有效小数 float64
+// EfficientFloatToFloatBy4Must 最多保留 4 位有效小数 float64
 func (instance *numberUtil) EfficientFloatToFloatBy4Must(fl big.Float) float64 {
 	f, _ := strconv.ParseFloat(instance.EfficientFloatToPrecisionString(fl, 4), 10)
 	return f
@@ -95,7 +95,7 @@ func (instance *numberUtil) EfficientFloatToFloatBy8Must(fl big.Float) float64 {
 	return f
 }
 
-// EfficientFloatToStringBy8 最多保留 8 位有效小数点位，并增加负数符号
+// EfficientFloatToStringByNegative8 最多保留 8 位有效小数点位，并增加负数符号
 func (instance *numberUtil) EfficientFloatToStringByNegative8(fl big.Float) string {
 	fs := instance.EfficientFloatToPrecisionString(fl, 8)
 	if !strings.HasPrefix(fs, "-") {
@@ -114,15 +114,47 @@ func (instance *numberUtil) EfficientFloatToStringByPositiveNumber2(fl big.Float
 }
 
 // EfficientFloatToPrecisionString 保留指定 precisionLength 长度的浮点数有效精度的字符串
+// fl big.Float
+// precisionLength uint8 精度，24 以内
 func (instance *numberUtil) EfficientFloatToPrecisionString(fl big.Float, precisionLength uint8) string {
-	f := NewFloat256().Copy(&fl)
-	sFloat := fmt.Sprintf("%."+fmt.Sprintf("%d", precisionLength)+"f", f)
-	end := instance.EfficientFloatLengthByPrecision(*f, precisionLength)
-	if 0 == end {
-		return strings.Split(sFloat, ".")[0]
+	if 24 < precisionLength {
+		precisionLength = 24
 	}
-	arr := strings.Split(sFloat, ".")
-	return sFloat[:len(arr[0])+int(end)+1]
+
+	// float256 转为 字符串
+	floatStr := fl.Text('f', 25)
+
+	val := floatStr
+	decimal := ""
+	if strings.Contains(floatStr, ".") {
+		val = strings.Split(floatStr, ".")[0]
+		decimal = strings.Split(floatStr, ".")[1]
+	} else {
+		return floatStr
+	}
+
+	if 0 == precisionLength {
+		return val
+	}
+
+	// 去除尾部的 0
+	decimal = strings.TrimRight(decimal, "0")
+
+	if int(precisionLength) < len(decimal) {
+		decimal = decimal[:precisionLength]
+	}
+
+	v := fmt.Sprintf("%s.%s", val, decimal)
+	return v
+
+	//f := NewFloat256().Copy(&fl)
+	//sFloat := fmt.Sprintf("%."+fmt.Sprintf("%d", precisionLength)+"f", f) // 这种方式会丢失精度
+	//end := instance.EfficientFloatLengthByPrecision(*f, precisionLength)
+	//if 0 == end {
+	//	return strings.Split(sFloat, ".")[0]
+	//}
+	//arr := strings.Split(sFloat, ".")
+	//return sFloat[:len(arr[0])+int(end)+1]
 }
 
 // EfficientFloatByString 保留字符串小数点后的有效位，比如 1.20000 保留位 1.2
@@ -253,5 +285,45 @@ func (*numberUtil) IntToHex0x(val int64) string {
 // ParseIntMust 屏蔽错误
 func (*numberUtil) ParseIntMust(val string) int {
 	v, _ := strconv.Atoi(val)
+	return v
+}
+
+// ParseFloat 字符串浮点数 转 float64
+// floatStr 浮点数
+// precisionLength 保存的小数长度，如果为 0 则舍去小数
+func (*numberUtil) ParseFloat(floatStr string, precisionLength int) (float64, error) {
+	val := floatStr
+	decimal := ""
+	if strings.Contains(floatStr, ".") {
+		val = strings.Split(floatStr, ".")[0]
+		decimal = strings.Split(floatStr, ".")[1]
+	} else {
+		value, err := strconv.ParseFloat(floatStr, 64)
+		return value, err
+	}
+
+	if 0 == precisionLength {
+		value, err := strconv.ParseFloat(val, 64)
+		return value, err
+	}
+
+	if precisionLength < len(decimal) {
+		decimal = decimal[:precisionLength]
+	} else {
+		value, err := strconv.ParseFloat(floatStr, 64)
+		return value, err
+	}
+
+	v := fmt.Sprintf("%s.%s", val, decimal)
+
+	value, err := strconv.ParseFloat(v, 64)
+	return value, err
+}
+
+// ParseFloatMust 字符串浮点数 转 float64
+// floatStr 浮点数
+// precisionLength 保存的小数长度，如果为 0 则舍去小数
+func (instance *numberUtil) ParseFloatMust(floatStr string, precisionLength int) float64 {
+	v, _ := instance.ParseFloat(floatStr, precisionLength)
 	return v
 }

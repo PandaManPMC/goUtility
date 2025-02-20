@@ -268,3 +268,10 @@ func TestIsSQLInject(t *testing.T) {
 	t.Log(GetInstanceByJudgeUtil().IsSQLInject("where 1==1"))
 	t.Log(GetInstanceByJudgeUtil().IsSQLInject("WHERE 1==1"))
 }
+
+func TestGetMaxLenStr(t *testing.T) {
+	s := "12345"
+	t.Log(GetInstanceByJudgeUtil().GetMaxLenStr(s, 5))
+	t.Log(GetInstanceByJudgeUtil().GetMaxLenStr(s, 4))
+	t.Log(GetInstanceByJudgeUtil().GetMaxLenStr(s, 1))
+}

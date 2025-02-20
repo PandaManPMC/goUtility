@@ -5,6 +5,7 @@ import (
 	"math/big"
 	"regexp"
 	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -260,4 +261,42 @@ func TestIsPN(t *testing.T) {
 func TestEfficientFloatToStringByNegative8(t *testing.T) {
 	t.Log(GetInstanceByNumberUtil().EfficientFloatToStringByNegative8(*NewFloat256ByStringMust("12.8")))
 	t.Log(GetInstanceByNumberUtil().EfficientFloatToStringByNegative8(*NewFloat256ByStringMust("-12.8")))
+}
+
+func TestEF(t *testing.T) {
+	s := "1.9999999999"
+	ff := NewFloat256ByStringMust(s)
+
+	t.Log(ff.String())
+	f64, _ := ff.Float64()
+	t.Log(f64)
+	t.Log(ff.Text('f', 25))
+	t.Log(GetInstanceByNumberUtil().ParseFloatMust(ff.Text('f', 25), 8))
+
+	bf := new(big.Float)
+	bf.SetPrec(128)
+	bf.SetString(s)
+	t.Log(bf.Text('f', 8))
+
+	t.Log("1.99保留8 =", GetInstanceByNumberUtil().EfficientFloatToPrecisionString(*NewFloat256ByStringMust("1.99"), 8))
+	t.Log("10.0909保留8 =", GetInstanceByNumberUtil().EfficientFloatToPrecisionString(*NewFloat256ByStringMust("10.0909"), 8))
+
+	t.Log(GetInstanceByNumberUtil().EfficientFloatToFloatBy8Must(*ff))
+	t.Log(GetInstanceByNumberUtil().EfficientFloatToFloatBy8Must(*ff))
+	t.Log(GetInstanceByNumberUtil().EfficientFloatToPrecisionString(*ff, 8))
+
+	pointIndex := strings.Index(s, ".")
+	t.Log(fmt.Sprintf("pointIndex=%d", pointIndex))
+
+	p := GetInstanceByNumberUtil().ParseFloatMust(s, 8)
+	t.Log(s)
+	t.Log(p) // 1.99999999
+	t.Log(GetInstanceByNumberUtil().ParseFloatMust("1", 8))
+	t.Log(GetInstanceByNumberUtil().ParseFloatMust("800", 8))
+	t.Log(GetInstanceByNumberUtil().ParseFloatMust("1.9999", 8))
+	t.Log(GetInstanceByNumberUtil().ParseFloatMust("0.5", 8))
+	t.Log(GetInstanceByNumberUtil().ParseFloatMust("1.1111111111111111111111", 8))
+	t.Log(GetInstanceByNumberUtil().ParseFloatMust("9.9999", 0))
+
+	return
 }
