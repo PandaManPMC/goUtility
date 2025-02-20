@@ -279,6 +279,7 @@ func TestEF(t *testing.T) {
 	t.Log(bf.Text('f', 8))
 
 	t.Log("1.99保留8 =", GetInstanceByNumberUtil().EfficientFloatToPrecisionString(*NewFloat256ByStringMust("1.99"), 8))
+	t.Log("0保留8 =", GetInstanceByNumberUtil().EfficientFloatToPrecisionString(*NewFloat256ByStringMust("0"), 8))
 	t.Log("10.0909保留8 =", GetInstanceByNumberUtil().EfficientFloatToPrecisionString(*NewFloat256ByStringMust("10.0909"), 8))
 
 	t.Log(GetInstanceByNumberUtil().EfficientFloatToFloatBy8Must(*ff))

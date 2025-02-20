@@ -142,6 +142,11 @@ func (instance *numberUtil) EfficientFloatToPrecisionString(fl big.Float, precis
 
 	if int(precisionLength) < len(decimal) {
 		decimal = decimal[:precisionLength]
+		decimal = strings.TrimRight(decimal, "0")
+	}
+
+	if 0 == len(decimal) {
+		return val
 	}
 
 	v := fmt.Sprintf("%s.%s", val, decimal)
