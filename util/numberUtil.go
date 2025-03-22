@@ -83,6 +83,18 @@ func (instance *numberUtil) EfficientFloatToStringBy2FormatZero(fl big.Float) st
 //	return instance.EfficientFloatToPrecisionString(fl, 4)
 //}
 
+// EfficientFloatToFloatByLenMust 最多保留 precisionLength 位有效小数 float64
+func (instance *numberUtil) EfficientFloatToFloatByLenMust(fl big.Float, precisionLength uint8) float64 {
+	f, _ := strconv.ParseFloat(instance.EfficientFloatToPrecisionString(fl, precisionLength), 10)
+	return f
+}
+
+// EfficientFloatToFloatBy2Must 最多保留 2 位有效小数 float64
+func (instance *numberUtil) EfficientFloatToFloatBy2Must(fl big.Float) float64 {
+	f, _ := strconv.ParseFloat(instance.EfficientFloatToPrecisionString(fl, 2), 10)
+	return f
+}
+
 // EfficientFloatToFloatBy4Must 最多保留 4 位有效小数 float64
 func (instance *numberUtil) EfficientFloatToFloatBy4Must(fl big.Float) float64 {
 	f, _ := strconv.ParseFloat(instance.EfficientFloatToPrecisionString(fl, 4), 10)

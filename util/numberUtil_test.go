@@ -301,3 +301,9 @@ func TestEF(t *testing.T) {
 
 	return
 }
+
+func TestEfficientFloatToFloatMust(t *testing.T) {
+	f1 := NewFloat256ByFloat64(2.987654321)
+	t.Log(f1)
+	t.Log(GetInstanceByNumberUtil().EfficientFloatToFloatBy2Must(*f1))
+}
