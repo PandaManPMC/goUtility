@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type httpUtil struct {
@@ -167,4 +168,37 @@ func (*httpUtil) CORS(h http.Handler) http.Handler {
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 		h.ServeHTTP(w, r)
 	})
+}
+
+func (*httpUtil) Get(url string, header map[string]string, timeOutSecond uint) ([]byte, error) {
+	if 0 == timeOutSecond {
+		timeOutSecond = 30
+	}
+	client := &http.Client{
+		Timeout: time.Duration(timeOutSecond) * time.Second,
+	}
+
+	req, err := http.NewRequest("GET", url, nil)
+	if nil != err {
+		return nil, err
+	}
+
+	if nil != header {
+		for k, v := range header {
+			req.Header.Set(k, v)
+		}
+	}
+
+	resp, err := client.Do(req)
+	if nil != err {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if nil != err {
+		return nil, err
+	}
+
+	return body, nil
 }
