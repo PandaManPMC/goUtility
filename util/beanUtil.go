@@ -246,3 +246,15 @@ func (that *beanUtil) JSONCopy(resource, toPointer any) error {
 	}
 	return json.Unmarshal(buf, toPointer)
 }
+
+func (that *beanUtil) StructToMapByJSON(jsonObj any) (map[string]any, error) {
+	data, err := json.Marshal(jsonObj)
+	if nil != err {
+		return nil, err
+	}
+	var result map[string]any
+	if e := json.Unmarshal(data, &result); nil != e {
+		return nil, e
+	}
+	return result, nil
+}
