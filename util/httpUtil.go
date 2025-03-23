@@ -170,15 +170,21 @@ func (*httpUtil) CORS(h http.Handler) http.Handler {
 	})
 }
 
-func (*httpUtil) Get(url string, header map[string]string, timeOutSecond uint) ([]byte, error) {
+func (*httpUtil) Get(u string, header map[string]string,
+	timeOutSecond uint, transport *http.Transport) ([]byte, error) {
 	if 0 == timeOutSecond {
 		timeOutSecond = 30
 	}
+	
 	client := &http.Client{
 		Timeout: time.Duration(timeOutSecond) * time.Second,
 	}
 
-	req, err := http.NewRequest("GET", url, nil)
+	if nil != transport {
+		client.Transport = transport
+	}
+
+	req, err := http.NewRequest("GET", u, nil)
 	if nil != err {
 		return nil, err
 	}
