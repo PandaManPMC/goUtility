@@ -175,7 +175,7 @@ func (*httpUtil) Get(u string, header map[string]string,
 	if 0 == timeOutSecond {
 		timeOutSecond = 30
 	}
-	
+
 	client := &http.Client{
 		Timeout: time.Duration(timeOutSecond) * time.Second,
 	}
@@ -190,6 +190,50 @@ func (*httpUtil) Get(u string, header map[string]string,
 	}
 
 	if nil != header {
+		for k, v := range header {
+			req.Header.Set(k, v)
+		}
+	}
+
+	resp, err := client.Do(req)
+	if nil != err {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if nil != err {
+		return nil, err
+	}
+
+	return body, nil
+}
+
+func (*httpUtil) PostClient(u string, header map[string]string, inBody []byte,
+	timeOutSecond uint, transport *http.Transport) ([]byte, error) {
+	if 0 == timeOutSecond {
+		timeOutSecond = 30
+	}
+
+	client := &http.Client{
+		Timeout: time.Duration(timeOutSecond) * time.Second,
+	}
+
+	if nil != transport {
+		client.Transport = transport
+	}
+
+	req, err := http.NewRequest("POST", u, bytes.NewReader(inBody))
+	if nil != err {
+		return nil, err
+	}
+
+	if nil == header || 0 == len(header) {
+		req.Header.Set("Content-Type", "application/json")
+	} else {
+		if _, isOk := header["Content-Type"]; !isOk {
+			req.Header.Set("Content-Type", "application/json")
+		}
 		for k, v := range header {
 			req.Header.Set(k, v)
 		}
