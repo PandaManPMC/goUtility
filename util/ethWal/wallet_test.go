@@ -40,10 +40,10 @@ func TestPrivateKeyToAddressETH(t *testing.T) {
 	t.Log(PrivateKeyToAddressETH(privateKey))
 }
 
-func TestIsValidETHAddress(t *testing.T) {
-	t.Log(IsValidETHAddress("0xa07880f94796250e9b37F4aFbcbAeb1e55A385c1"))
-	t.Log(IsValidETHAddress("0xa07880f94796250e9b37F4aFbcbAeb1e55A385cp"))
-	t.Log(IsValidETHAddress("TVTV9aEDdszTNYayNBdjpQ7xfXH3DMyzXq"))
-	t.Log(IsValidETHAddress("0xa07880f94796250e9b37F4aFbcbAeb1e55A385c"))
-	t.Log(IsValidETHAddress(""))
+func TestIValidAddress(t *testing.T) {
+	t.Log(IValidAddress("0xa07880f94796250e9b37F4aFbcbAeb1e55A385c1"))
+	t.Log(IValidAddress("0xa07880f94796250e9b37F4aFbcbAeb1e55A385cp"))
+	t.Log(IValidAddress("TVTV9aEDdszTNYayNBdjpQ7xfXH3DMyzXq"))
+	t.Log(IValidAddress("0xa07880f94796250e9b37F4aFbcbAeb1e55A385c"))
+	t.Log(IValidAddress(""))
 }
