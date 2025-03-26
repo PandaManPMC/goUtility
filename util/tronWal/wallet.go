@@ -37,6 +37,7 @@ func EncodeCheck(input []byte) string {
 	return base58.Encode(inputCheck)
 }
 
+// ValidAddress 地址验证
 func ValidAddress(addr string) bool {
 	if len(addr) != 34 {
 		return false

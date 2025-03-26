@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"goUtility/util"
 	"golang.org/x/crypto/sha3"
+	"regexp"
+	"strings"
 )
 
 func PubKeyToAddressETH(publicKey ecdsa.PublicKey) string {
@@ -38,4 +40,11 @@ func ImportWallet(mnemonic string, index int) (privateKey *ecdsa.PrivateKey, add
 
 	address = PrivateKeyToAddressETH(privateKey)
 	return
+}
+
+// IsValidETHAddress 校验 ETH 地址格式（0x 开头，40 个十六进制字符）
+func IsValidETHAddress(address string) bool {
+	address = strings.ToLower(address)
+	match, _ := regexp.MatchString("^0x[a-fA-F0-9]{40}$", address)
+	return match
 }

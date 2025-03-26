@@ -115,3 +115,12 @@ func TestTronAddressToHex(t *testing.T) {
 
 	fmt.Println("Hex 地址:", hexAddress)
 }
+
+func TestValidAddress(t *testing.T) {
+	t.Log(ValidAddress("TVTV9aEDdszTNYayNBdjpQ7xfXH3DMyzXq"))
+	t.Log(ValidAddress("TVTV9aEDdszTNYayNBdjpQ7xfXH3DMyzX1"))
+	t.Log(ValidAddress("0xa07880f94796250e9b37F4aFbcbAeb1e55A385c1"))
+	t.Log(ValidAddress("TVTV9aEDdszTNYayNBdjpQ7xfXH3DMyzX"))
+	t.Log(ValidAddress(""))
+
+}
