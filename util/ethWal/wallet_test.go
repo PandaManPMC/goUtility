@@ -41,9 +41,9 @@ func TestPrivateKeyToAddressETH(t *testing.T) {
 }
 
 func TestIValidAddress(t *testing.T) {
-	t.Log(IValidAddress("0xa07880f94796250e9b37F4aFbcbAeb1e55A385c1"))
-	t.Log(IValidAddress("0xa07880f94796250e9b37F4aFbcbAeb1e55A385cp"))
-	t.Log(IValidAddress("TVTV9aEDdszTNYayNBdjpQ7xfXH3DMyzXq"))
-	t.Log(IValidAddress("0xa07880f94796250e9b37F4aFbcbAeb1e55A385c"))
-	t.Log(IValidAddress(""))
+	t.Log(ValidAddress("0xa07880f94796250e9b37F4aFbcbAeb1e55A385c1"))
+	t.Log(ValidAddress("0xa07880f94796250e9b37F4aFbcbAeb1e55A385cp"))
+	t.Log(ValidAddress("TVTV9aEDdszTNYayNBdjpQ7xfXH3DMyzXq"))
+	t.Log(ValidAddress("0xa07880f94796250e9b37F4aFbcbAeb1e55A385c"))
+	t.Log(ValidAddress(""))
 }
