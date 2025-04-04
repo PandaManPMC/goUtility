@@ -103,7 +103,8 @@ func (instance *numberUtil) EfficientFloatToFloatBy4Must(fl big.Float) float64 {
 
 // EfficientFloatToFloatBy8Must 最多保留 8 位有效小数 float64
 func (instance *numberUtil) EfficientFloatToFloatBy8Must(fl big.Float) float64 {
-	f, _ := strconv.ParseFloat(instance.EfficientFloatToPrecisionString(fl, 8), 10)
+	s := instance.EfficientFloatToPrecisionString(fl, 8)
+	f, _ := strconv.ParseFloat(s, 10)
 	return f
 }
 
@@ -135,7 +136,6 @@ func (instance *numberUtil) EfficientFloatToPrecisionString(fl big.Float, precis
 
 	// float256 转为 字符串
 	floatStr := fl.Text('f', 25)
-
 	val := floatStr
 	decimal := ""
 	if strings.Contains(floatStr, ".") {
@@ -343,4 +343,13 @@ func (*numberUtil) ParseFloat(floatStr string, precisionLength int) (float64, er
 func (instance *numberUtil) ParseFloatMust(floatStr string, precisionLength int) float64 {
 	v, _ := instance.ParseFloat(floatStr, precisionLength)
 	return v
+}
+
+// Abs 绝对值，排除负数干扰
+// 对 int 类型没有内置 math.Abs（只有 float64 的）
+func (instance *numberUtil) Abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
 }

@@ -307,3 +307,33 @@ func TestEfficientFloatToFloatMust(t *testing.T) {
 	t.Log(f1)
 	t.Log(GetInstanceByNumberUtil().EfficientFloatToFloatBy2Must(*f1))
 }
+
+func TestToFloat(t *testing.T) {
+	var amount float64 = 499
+	a1 := *NewFloat256ByFloat64(1.99)
+	for i := 0; i < 100; i++ {
+		t.Log(amount)
+		amount = GetInstanceByNumberUtil().EfficientFloatToFloatBy8Must(Float256Add(*NewFloat256ByFloat64(amount), a1))
+	}
+}
+
+func TestStrToFloat(t *testing.T) {
+	amount := "499"
+	a1 := *NewFloat256ByStringMust("1.99")
+	for i := 0; i < 100; i++ {
+		t.Log(amount)
+		amount = GetInstanceByNumberUtil().EfficientFloatToStringBy8(Float256Add(*NewFloat256ByStringMust(amount), a1))
+		t.Log(amount)
+		a2 := GetInstanceByNumberUtil().EfficientFloatToFloatBy8Must(Float256Add(*NewFloat256ByStringMust(amount), a1))
+		t.Log(a2)
+	}
+}
+
+func TestF64(t *testing.T) {
+	f := 508.95
+	t.Log(f)                                                                                                                    // 508.95
+	t.Log(GetInstanceByNumberUtil().EfficientFloatToStringBy8(*NewFloat256ByFloat64(f)))                                        // 508.94999999
+	t.Log(GetInstanceByNumberUtil().EfficientFloatToStringBy8(Float256Add(*NewFloat256ByFloat64(f), *NewFloat256ByFloat64(0)))) // 508.94999999
+	t.Log(GetInstanceByNumberUtil().EfficientFloatToStringBy8(*NewFloat256ByFloat64(508.95)))                                   // 508.94999999
+	t.Log(GetInstanceByNumberUtil().EfficientFloatToStringBy8(*NewFloat256ByStringMust("508.95")))                              // 508.95
+}
