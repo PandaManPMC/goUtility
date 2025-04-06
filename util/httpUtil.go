@@ -201,6 +201,10 @@ func (*httpUtil) Get(u string, header map[string]string,
 	}
 	defer resp.Body.Close()
 
+	if http.StatusOK != resp.StatusCode {
+		return nil, errors.New(fmt.Sprintf("StatusCode=%d Status=%s", resp.StatusCode, resp.Status))
+	}
+
 	body, err := io.ReadAll(resp.Body)
 	if nil != err {
 		return nil, err
