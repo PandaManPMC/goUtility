@@ -246,29 +246,8 @@ func (that *dateUtil) GetDiffDaysByYyyyMMdd(beginTime, endTime uint64) int {
 	return that.GetDiffDays(begin.Unix(), end.Unix())
 }
 
-// GetDapengDateBeginTime 获取当前大鹏时间的开始时间
-func (that *dateUtil) GetDapengDateBeginTime() time.Time {
-	// 今天的北京日期
-	timezone, _ := time.LoadLocation(TimeZoneBeijing)
-	todayDatetime := time.Now().In(timezone)
-	var startTime time.Time
-
-	// 如果当前时间大于12小时，则开始时间是今日的正午12点；如果不是，则是昨日12点。
-	if todayDatetime.Hour() >= 12 {
-		todayDate := todayDatetime.Format(DateFormatyyyyMMdd)
-		startTime, _ = time.ParseInLocation(DateFormatyyyyMMddHHmmss, todayDate+"120000", timezone)
-
-		return startTime
-	}
-
-	todayDate := todayDatetime.Add(-time.Hour * 24).Format(DateFormatyyyyMMdd)
-	startTime, _ = time.ParseInLocation(DateFormatyyyyMMddHHmmss, todayDate+"120000", timezone)
-
-	return startTime
-}
-
-// ParseToyyyyMMddMust 将字符串 20221012 格式化成 time.Time （使用 Parse 默认 UTC 时区）
-func (*dateUtil) ParseToyyyyMMddMust(day uint64) time.Time {
+// ParseToYyyyMMddMust 将字符串 20221012 格式化成 time.Time （使用 Parse 默认 UTC 时区）
+func (*dateUtil) ParseToYyyyMMddMust(day uint64) time.Time {
 	t, _ := time.Parse(DateFormatyyyyMMdd, fmt.Sprintf("%d", day))
 	return t
 }
