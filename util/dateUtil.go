@@ -23,6 +23,7 @@ const (
 	DateFormatyyyyMM               = "200601"
 	DateFormatyyyyMMddHHmmss       = "20060102150405"   // 年月日时分秒 无分隔符
 	DateFormtyyyyMMddHHmm          = "2006-01-02 15:04" // 年月日时：分
+	DaySecond                      = 86400              // 一天秒数
 )
 
 var dateUtilInstance dateUtil
