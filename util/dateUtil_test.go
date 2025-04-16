@@ -1,8 +1,6 @@
 package util
 
 import (
-	"fmt"
-	"strconv"
 	"testing"
 	"time"
 )
@@ -72,33 +70,9 @@ func TestAddDay0OClockUnix(t *testing.T) {
 	t.Log(s4)
 }
 
-func TestGetDapengDateBeginTime(t *testing.T) {
-	t.Log(GetInstanceByDateUtil().GetDapengDateBeginTime())
-
-	endTime := 1709246853
-	dat := time.Unix(int64(endTime), 0)
-	dat = dat.AddDate(0, 0, -1)
-	datS := dat.Format(DateFormatyyyyMMdd)
-	datI, _ := strconv.Atoi(datS)
-	t.Log(datI)
-
-	t.Log(time.Minute)
-
-	startTimeStamp := uint64(1709225200)
-	timeNow := uint64(time.Now().Unix())
-	durationMinute := (timeNow - startTimeStamp) / 60
-
-	t.Log(durationMinute)
-	startMinuteDuration := time.Duration(durationMinute) * time.Minute
-
-	// 每次最多5分钟
-	endHourDuration := startMinuteDuration - 1*time.Minute
-	t.Log(startMinuteDuration)
-	t.Log(endHourDuration)
-
-	t.Log(fmt.Sprintf("%v %v", time.Now().Add(-startMinuteDuration), time.Now().Add(-endHourDuration)))
-
-	t.Log(fmt.Sprintf("%v", time.Minute*8))
-	t.Log(fmt.Sprintf("%v", time.Minute*3))
-
+func TestDayTarget(t *testing.T) {
+	dayTarget := 20210415
+	dayTime := GetInstanceByDateUtil().ParseToYyyyMMddMust(uint64(dayTarget))
+	t.Log(dayTime.String())
+	t.Log(GetInstanceByDateUtil().FormatUnixToYYYYMMddHHmmSSMust(dayTime.Unix()))
 }
