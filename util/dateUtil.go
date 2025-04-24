@@ -251,3 +251,30 @@ func (*dateUtil) ParseToYyyyMMddMust(day uint64) time.Time {
 	t, _ := time.Parse(DateFormatyyyyMMdd, fmt.Sprintf("%d", day))
 	return t
 }
+
+// GetDayTarget unix 时间戳 -> yyyyMMdd
+func (that *dateUtil) GetDayTarget(unix int64) int64 {
+	return int64(that.FormatUnixToYYYYMMddIntegerMust(unix))
+}
+
+// GetUnixRangeFromDayTarget 根据日期获得这一天的起始结束 unix 时间错，如 dayTarget = 20240101
+func (*dateUtil) GetUnixRangeFromDayTarget(dayTarget int64) (start int64, end int64, err error) {
+	// 将 uint64 转换为字符串
+	dateStr := strconv.FormatInt(dayTarget, 10)
+	if len(dateStr) != 8 {
+		return 0, 0, fmt.Errorf("invalid date format. It must be yyyyMMdd")
+	}
+
+	// 解析为 time.Time
+	t, err := time.Parse("20060102", dateStr)
+	if err != nil {
+		return 0, 0, err
+	}
+
+	// 起始时间：当天 00:00:00
+	startTime := t
+	// 结束时间：当天 23:59:59
+	endTime := t.Add(24*time.Hour - time.Second)
+
+	return startTime.Unix(), endTime.Unix(), nil
+}

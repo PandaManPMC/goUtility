@@ -76,3 +76,10 @@ func TestDayTarget(t *testing.T) {
 	t.Log(dayTime.String())
 	t.Log(GetInstanceByDateUtil().FormatUnixToYYYYMMddHHmmSSMust(dayTime.Unix()))
 }
+
+func TestGetUnixRangeFromDayTarget(t *testing.T) {
+	dayTarget := GetInstanceByDateUtil().GetDayTarget(time.Now().Unix())
+	t.Log(dayTarget)
+	begin, end, _ := GetInstanceByDateUtil().GetUnixRangeFromDayTarget(dayTarget)
+	t.Log(begin, end)
+}
