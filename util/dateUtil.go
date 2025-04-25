@@ -292,3 +292,39 @@ func (*dateUtil) GetRecentDates(years, months, days int) []int {
 
 	return result
 }
+
+// GetRecentDatesByEnd 获取 -years -months -days 至 end 的 dayTarget， months = -3 则3个月前至今的 dayTarget
+func (that *dateUtil) GetRecentDatesByEnd(years, months, days int, end time.Time) []int {
+	start := end.AddDate(years, months, days)
+	return that.GetRecentDatesByBeginEnd(start, end)
+}
+
+// GetRecentDatesByBeginEnd 获取 begin 至 end 的 dayTarget， months = -3 则3个月前至今的 dayTarget
+func (*dateUtil) GetRecentDatesByBeginEnd(begin, end time.Time) []int {
+	var result []int
+
+	for t := begin; !t.After(end); t = t.AddDate(0, 0, 1) {
+		dateInt := t.Year()*10000 + int(t.Month())*100 + t.Day()
+		result = append(result, dateInt)
+	}
+
+	return result
+}
+
+// HourList 获得日的 小时列表 [00,01,...]
+func (*dateUtil) HourList(isToday bool) []string {
+	hourLst := make([]string, 0)
+	maxHour := 24
+	if isToday {
+		maxHour = time.Now().Hour()
+	}
+
+	for i := 0; i <= maxHour; i++ {
+		hour := fmt.Sprintf("%d", i)
+		if 1 == len(hour) {
+			hour = fmt.Sprintf("0%s", hour)
+		}
+		hourLst = append(hourLst, hour)
+	}
+	return hourLst
+}
