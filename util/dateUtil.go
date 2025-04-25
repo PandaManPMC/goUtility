@@ -278,3 +278,17 @@ func (*dateUtil) GetUnixRangeFromDayTarget(dayTarget int64) (start int64, end in
 
 	return startTime.Unix(), endTime.Unix(), nil
 }
+
+// GetRecent3MonthsDates 获取 -years -months -days 至今的 dayTarget， months = -3 则3个月前至今的 dayTarget
+func (*dateUtil) GetRecent3MonthsDates(years, months, days int) []int {
+	var result []int
+	end := time.Now()
+	start := end.AddDate(years, months, days)
+
+	for t := start; !t.After(end); t = t.AddDate(0, 0, 1) {
+		dateInt := t.Year()*10000 + int(t.Month())*100 + t.Day()
+		result = append(result, dateInt)
+	}
+
+	return result
+}
