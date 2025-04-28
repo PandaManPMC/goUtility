@@ -83,3 +83,8 @@ func TestGetUnixRangeFromDayTarget(t *testing.T) {
 	begin, end, _ := GetInstanceByDateUtil().GetUnixRangeFromDayTarget(dayTarget)
 	t.Log(begin, end)
 }
+
+func TestHourList(t *testing.T) {
+	ls := GetInstanceByDateUtil().HourList(true)
+	t.Log(ls)
+}

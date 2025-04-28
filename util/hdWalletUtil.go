@@ -73,9 +73,24 @@ func (that *hDWalletUtil) ImportWalletFromMnemonic(mnemonic string) (*hdwallet.W
 	return hdwallet.NewFromMnemonic(mnemonic)
 }
 
+// WalletPrivateKey 默认 eth-60，BSC、POL、TRON 兼容，但 BTC 等不兼容
 func (that *hDWalletUtil) WalletPrivateKey(wallet *hdwallet.Wallet, index int) (privateKey *ecdsa.PrivateKey, err error) {
 	// 动态生成路径
 	path := hdwallet.MustParseDerivationPath(fmt.Sprintf(pathDrive, index))
+	var account accounts.Account
+	account, err = wallet.Derive(path, true)
+	if nil != err {
+		return nil, err
+	}
+	return wallet.PrivateKey(account)
+}
+
+// WalletPrivateKeyByCoinType 不同币种 path 不同
+// coinType 比特币（BTC）：0 莱特币（LTC）：2  狗狗币（DOGE）：3 ETH:60
+func (that *hDWalletUtil) WalletPrivateKeyByCoinType(wallet *hdwallet.Wallet, coinType, index int) (privateKey *ecdsa.PrivateKey, err error) {
+	pd := fmt.Sprintf("m/44'/%d'/0'/0/%d", coinType, index)
+	// 动态生成路径
+	path := hdwallet.MustParseDerivationPath(pd)
 	var account accounts.Account
 	account, err = wallet.Derive(path, true)
 	if nil != err {
