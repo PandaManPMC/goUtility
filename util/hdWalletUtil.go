@@ -85,6 +85,44 @@ func (that *hDWalletUtil) WalletPrivateKey(wallet *hdwallet.Wallet, index int) (
 	return wallet.PrivateKey(account)
 }
 
+// HDWallet coinType BIP-44
+const (
+	BTC  = 0
+	LTC  = 2
+	DOGE = 3
+	ETH  = 60
+	TRON = 195
+	SOL  = 501
+)
+
+func GetCoinTypeByNetWork(netWork string) int {
+	switch netWork {
+	case "Bitcoin":
+		fallthrough
+	case "BTC":
+		return BTC
+	case "Litecoin":
+		fallthrough
+	case "LTC":
+		return LTC
+	case "Dogecoin":
+		fallthrough
+	case "DOGE":
+		return DOGE
+	case "Ethereum":
+		fallthrough
+	case "ETH":
+		return ETH
+	case "TRON":
+		return TRON
+	case "Solana":
+		fallthrough
+	case "SOL":
+		return SOL
+	}
+	panic(fmt.Sprintf("%s not found", netWork))
+}
+
 // WalletPrivateKeyByCoinType 不同币种 path 不同
 // coinType 比特币（BTC）：0 莱特币（LTC）：2  狗狗币（DOGE）：3 ETH:60
 func (that *hDWalletUtil) WalletPrivateKeyByCoinType(wallet *hdwallet.Wallet, coinType, index int) (privateKey *ecdsa.PrivateKey, err error) {
