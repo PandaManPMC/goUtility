@@ -42,7 +42,7 @@ func TestImportWallet(t *testing.T) {
 }
 
 func TestHDWallet2(t *testing.T) {
-	coinType := LTCWalletType
+	coinType := util.LTCHDCoinType
 	addressType := LTCAddress
 
 	mnemonic, err := util.GetInstanceByHDWalletUtil().GenerateMnemonicBy24()

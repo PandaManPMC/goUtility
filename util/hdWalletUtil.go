@@ -85,47 +85,49 @@ func (that *hDWalletUtil) WalletPrivateKey(wallet *hdwallet.Wallet, index int) (
 	return wallet.PrivateKey(account)
 }
 
+type HDCoinType int
+
 // HDWallet coinType BIP-44
 const (
-	BTC  = 0
-	LTC  = 2
-	DOGE = 3
-	ETH  = 60
-	TRON = 195
-	SOL  = 501
+	BTCHDCoinType  HDCoinType = 0
+	LTCHDCoinType  HDCoinType = 2
+	DOGEHDCoinType HDCoinType = 3
+	ETHHDCoinType  HDCoinType = 60
+	TRONHDCoinType HDCoinType = 195
+	SOLHDCoinType  HDCoinType = 501
 )
 
-func GetCoinTypeByNetWork(netWork string) int {
+func GetCoinTypeByNetWork(netWork string) HDCoinType {
 	switch netWork {
 	case "Bitcoin":
 		fallthrough
 	case "BTC":
-		return BTC
+		return BTCHDCoinType
 	case "Litecoin":
 		fallthrough
 	case "LTC":
-		return LTC
+		return LTCHDCoinType
 	case "Dogecoin":
 		fallthrough
 	case "DOGE":
-		return DOGE
+		return DOGEHDCoinType
 	case "Ethereum":
 		fallthrough
 	case "ETH":
-		return ETH
+		return ETHHDCoinType
 	case "TRON":
-		return TRON
+		return TRONHDCoinType
 	case "Solana":
 		fallthrough
 	case "SOL":
-		return SOL
+		return SOLHDCoinType
 	}
 	panic(fmt.Sprintf("%s not found", netWork))
 }
 
 // WalletPrivateKeyByCoinType 不同币种 path 不同
 // coinType 比特币（BTC）：0 莱特币（LTC）：2  狗狗币（DOGE）：3 ETH:60
-func (that *hDWalletUtil) WalletPrivateKeyByCoinType(wallet *hdwallet.Wallet, coinType, index int) (privateKey *ecdsa.PrivateKey, err error) {
+func (that *hDWalletUtil) WalletPrivateKeyByCoinType(wallet *hdwallet.Wallet, coinType HDCoinType, index int) (privateKey *ecdsa.PrivateKey, err error) {
 	pd := fmt.Sprintf("m/44'/%d'/0'/0/%d", coinType, index)
 	// 动态生成路径
 	path := hdwallet.MustParseDerivationPath(pd)

@@ -92,15 +92,9 @@ func GenerateAddress(privateKey *ecdsa.PrivateKey, coinType byte) (string, error
 	return address, nil
 }
 
-const (
-	BTCWalletType  = 0
-	LTCWalletType  = 2
-	DogeWalletType = 3
-)
-
 // ImportWallet
 // coinType 比特币（BTC）：0 莱特币（LTC）：2  狗狗币（DOGE）：3
-func ImportWallet(mnemonic string, coinType, index int) (privateKey *ecdsa.PrivateKey, address string, err error) {
+func ImportWallet(mnemonic string, coinType util.HDCoinType, index int) (privateKey *ecdsa.PrivateKey, address string, err error) {
 	hdWallet, err := util.GetInstanceByHDWalletUtil().ImportWalletFromMnemonic(mnemonic)
 	if nil != err {
 		return nil, "", err
@@ -113,11 +107,11 @@ func ImportWallet(mnemonic string, coinType, index int) (privateKey *ecdsa.Priva
 
 	var coinByte byte = 0x00
 	switch coinType {
-	case BTCWalletType:
+	case 0:
 		coinByte = 0x00
-	case LTCWalletType:
+	case 2:
 		coinByte = 0x30
-	case DogeWalletType:
+	case 3:
 		coinByte = 0x1E
 	default:
 		return nil, "", errors.New("invalid coinType")
