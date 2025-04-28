@@ -73,7 +73,7 @@ func (that *hDWalletUtil) ImportWalletFromMnemonic(mnemonic string) (*hdwallet.W
 	return hdwallet.NewFromMnemonic(mnemonic)
 }
 
-// WalletPrivateKey 默认 eth-60，BSC、POL、TRON 兼容，但 BTC 等不兼容
+// WalletPrivateKey 默认 eth-60，BSC、POL 兼容，但 BTC 等不兼容。虽可兼容 TRON，但不推荐，例如 TRONLink 便是标准的 coinType，不同的type会导致助记词不通用，但私钥依然通用。
 func (that *hDWalletUtil) WalletPrivateKey(wallet *hdwallet.Wallet, index int) (privateKey *ecdsa.PrivateKey, err error) {
 	// 动态生成路径
 	path := hdwallet.MustParseDerivationPath(fmt.Sprintf(pathDrive, index))
@@ -99,6 +99,22 @@ const (
 
 func GetCoinTypeByNetWork(netWork string) HDCoinType {
 	switch netWork {
+	case "BNB":
+		fallthrough
+	case "BSC":
+		fallthrough
+	case "BNB Smart Chain":
+		fallthrough
+	case "Matic":
+		fallthrough
+	case "Polygon":
+		fallthrough
+	case "POL":
+		fallthrough
+	case "Ethereum":
+		fallthrough
+	case "ETH":
+		return ETHHDCoinType
 	case "Bitcoin":
 		fallthrough
 	case "BTC":
@@ -111,10 +127,6 @@ func GetCoinTypeByNetWork(netWork string) HDCoinType {
 		fallthrough
 	case "DOGE":
 		return DOGEHDCoinType
-	case "Ethereum":
-		fallthrough
-	case "ETH":
-		return ETHHDCoinType
 	case "TRON":
 		return TRONHDCoinType
 	case "Solana":

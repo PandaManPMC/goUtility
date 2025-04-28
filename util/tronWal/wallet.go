@@ -122,7 +122,7 @@ func ImportWallet(mnemonic string, index int) (privateKey *ecdsa.PrivateKey, add
 		return nil, "", fmt.Errorf("failed to import mnemonic: %v", err)
 	}
 
-	privateKey, err = util.GetInstanceByHDWalletUtil().WalletPrivateKey(wallet, index)
+	privateKey, err = util.GetInstanceByHDWalletUtil().WalletPrivateKeyByCoinType(wallet, util.TRONHDCoinType, index)
 	if nil != err {
 		return nil, "", fmt.Errorf("failed to WalletPrivateKey: %v", err)
 	}
