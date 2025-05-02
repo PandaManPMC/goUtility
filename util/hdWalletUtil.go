@@ -9,7 +9,7 @@ import (
 	hdwallet "github.com/miguelmota/go-ethereum-hdwallet"
 )
 
-// pathDrive 路径
+// pathDrive 路径(60 eth)
 const pathDrive = "m/44'/60'/0'/0/%d"
 
 type hDWalletUtil struct {

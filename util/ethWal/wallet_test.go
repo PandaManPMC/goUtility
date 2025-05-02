@@ -9,7 +9,7 @@ import (
 )
 
 func Test1(t *testing.T) {
-	privateKey, err := util.GetInstanceByHDWalletUtil().LoadWalletByPrivateKey("")
+	privateKey, err := util.GetInstanceByHDWalletUtil().LoadWalletByPrivateKey("1ea107cf1e8cbca5a1e9ee2661505b1836db495c574eace64ecdbc20b29b83fd")
 	if nil != err {
 		t.Fatal(err)
 	}
@@ -33,7 +33,7 @@ func Test1(t *testing.T) {
 }
 
 func TestPrivateKeyToAddressETH(t *testing.T) {
-	privateKey, err := util.GetInstanceByHDWalletUtil().LoadWalletByPrivateKey("")
+	privateKey, err := util.GetInstanceByHDWalletUtil().LoadWalletByPrivateKey("1ea107cf1e8cbca5a1e9ee2661505b1836db495c574eace64ecdbc20b29b83fd")
 	if nil != err {
 		t.Fatal(err)
 	}
