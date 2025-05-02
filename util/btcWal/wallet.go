@@ -57,7 +57,7 @@ func GenerateAddressByDoge(privateKey *ecdsa.PrivateKey) (string, error) {
 	return GenerateAddress(privateKey, DogeAddress)
 }
 
-// GenerateAddress 生成地址
+// GenerateAddress 生成地址(Legacy（P2PKH）地址)
 // 要根据 ecdsa.PrivateKey 生成比特币（BTC）、莱特币（LTC）和狗狗币（DOGE）的地址，您需要执行以下步骤：
 // 获取公钥：从私钥生成公钥。
 // 计算公钥哈希：对公钥进行 SHA-256 哈希，然后对结果进行 RIPEMD-160 哈希。
@@ -87,6 +87,33 @@ func GenerateAddress(privateKey *ecdsa.PrivateKey, coinType byte) (string, error
 
 	// 拼接地址
 	addressBytes = append(addressBytes, checksum4[:]...)
+	address := base58.Encode(addressBytes)
+
+	return address, nil
+}
+
+func GenerateAddressCompressed(privateKey *ecdsa.PrivateKey, coinType byte) (string, error) {
+	// 使用压缩公钥（33 字节，02 或 03 开头）
+	var compressedPubKey []byte
+	if privateKey.PublicKey.Y.Bit(0) == 0 {
+		compressedPubKey = append([]byte{0x02}, privateKey.PublicKey.X.Bytes()...)
+	} else {
+		compressedPubKey = append([]byte{0x03}, privateKey.PublicKey.X.Bytes()...)
+	}
+
+	// 计算公钥哈希（RIPEMD160(SHA256(pubKey)))
+	pubKHash := pubKeyHash(compressedPubKey)
+
+	// 添加版本字节（coinType: 比如 0x1E for DOGE, 0x00 for BTC, etc.）
+	addressBytes := append([]byte{coinType}, pubKHash...)
+
+	// 计算校验和：双SHA256
+	checksum := sha256.Sum256(addressBytes)
+	checksum = sha256.Sum256(checksum[:])
+	checksum4 := checksum[:4]
+
+	// 拼接地址并 base58 编码
+	addressBytes = append(addressBytes, checksum4...)
 	address := base58.Encode(addressBytes)
 
 	return address, nil

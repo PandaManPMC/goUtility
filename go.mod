@@ -1,6 +1,6 @@
 module goUtility
 
-go 1.19
+go 1.23.0
 
 require (
 	github.com/btcsuite/btcd v0.22.1

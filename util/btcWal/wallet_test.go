@@ -42,8 +42,8 @@ func TestImportWallet(t *testing.T) {
 }
 
 func TestHDWallet2(t *testing.T) {
-	coinType := util.LTCHDCoinType
-	addressType := LTCAddress
+	coinType := util.DOGEHDCoinType
+	addressType := DogeAddress
 
 	mnemonic, err := util.GetInstanceByHDWalletUtil().GenerateMnemonicBy24()
 	if nil != err {
@@ -55,7 +55,7 @@ func TestHDWallet2(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	privateKey, err := util.GetInstanceByHDWalletUtil().WalletPrivateKeyByCoinType(wallet, coinType, 1)
+	privateKey, err := util.GetInstanceByHDWalletUtil().WalletPrivateKeyByCoinType(wallet, coinType, 0)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -81,6 +81,40 @@ func TestHDWallet2(t *testing.T) {
 
 }
 
+func TestGenerateAddressCompressed(t *testing.T) {
+	coinType := util.DOGEHDCoinType
+	addressType := DogeAddress
+
+	mnemonic, err := util.GetInstanceByHDWalletUtil().GenerateMnemonicBy24()
+	if nil != err {
+		t.Fatal(err)
+	}
+	t.Log(mnemonic)
+	wallet, err := util.GetInstanceByHDWalletUtil().ImportWalletFromMnemonic(mnemonic)
+	if nil != err {
+		t.Fatal(err)
+	}
+
+	privateKey, err := util.GetInstanceByHDWalletUtil().WalletPrivateKeyByCoinType(wallet, coinType, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	privateKeyStr := util.GetInstanceByHDWalletUtil().PriKeyToHexString(privateKey)
+
+	t.Log(privateKeyStr)
+
+	addr, err := GenerateAddressCompressed(privateKey, addressType)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(addr)
+	t.Log("isBTCAddress=", IsValidBTCAddress(addr))
+	t.Log("isLTCAddress=", IsValidLTCAddress(addr))
+	t.Log("isDogeAddress=", IsValidDOGEAddress(addr))
+}
+
 func TestPrivateKetToAddr(t *testing.T) {
 	privateKey := "1ea107cf1e8cbca5a1e9ee2661505b1836db495c574eace64ecdbc20b29b83fd"
 
@@ -89,11 +123,12 @@ func TestPrivateKetToAddr(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	addr, err := GenerateAddress(pk, DogeAddress)
+	addr, err := GenerateAddress(pk, LTCAddress)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	t.Log(addr)
 	t.Log(IsValidDOGEAddress(addr))
+
 }
