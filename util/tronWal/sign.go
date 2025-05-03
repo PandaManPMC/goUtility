@@ -5,11 +5,12 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"github.com/PandaManPMC/gotron-sdk/pkg/proto/core"
 	"github.com/ethereum/go-ethereum/crypto"
 	"google.golang.org/protobuf/proto"
 )
 
-func SignTransaction(transaction *Transaction, privateKey string) (*Transaction, error) {
+func SignTransaction(transaction *core.Transaction, privateKey string) (*core.Transaction, error) {
 	privateBytes, err := hex.DecodeString(privateKey)
 	if err != nil {
 		return nil, fmt.Errorf("hex decode private key error: %v", err)
