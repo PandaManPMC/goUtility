@@ -143,7 +143,7 @@ func ImportWallet(mnemonic string, coinType util.HDCoinType, index int) (private
 	default:
 		return nil, "", errors.New("invalid coinType")
 	}
-	address, err = GenerateAddress(privateKey, coinByte)
+	address, err = GenerateAddressCompressed(privateKey, coinByte)
 	return privateKey, address, err
 }
 
