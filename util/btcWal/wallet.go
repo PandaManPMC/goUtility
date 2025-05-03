@@ -7,6 +7,7 @@ import (
 	"github.com/btcsuite/btcd/btcutil"
 	"github.com/btcsuite/btcd/btcutil/base58"
 	"github.com/btcsuite/btcd/chaincfg"
+	"github.com/ethereum/go-ethereum/crypto"
 	"goUtility/util"
 	"golang.org/x/crypto/ripemd160"
 )
@@ -144,6 +145,31 @@ func ImportWallet(mnemonic string, coinType util.HDCoinType, index int) (private
 		return nil, "", errors.New("invalid coinType")
 	}
 	address, err = GenerateAddressCompressed(privateKey, coinByte)
+	return privateKey, address, err
+}
+
+func GenerateAddressCompressedByPK(privateKey *ecdsa.PrivateKey, coinType util.HDCoinType) (string, error) {
+	var coinByte byte = 0x00
+	switch coinType {
+	case 0:
+		coinByte = 0x00
+	case 2:
+		coinByte = 0x30
+	case 3:
+		coinByte = 0x1E
+	default:
+		return "", errors.New("invalid coinType")
+	}
+	address, err := GenerateAddressCompressed(privateKey, coinByte)
+	return address, err
+}
+
+func GenerateAddressCompressedByPKStr(privateKeyStr string, coinType util.HDCoinType) (*ecdsa.PrivateKey, string, error) {
+	privateKey, e := crypto.HexToECDSA(privateKeyStr)
+	if nil != e {
+		return nil, "", e
+	}
+	address, err := GenerateAddressCompressedByPK(privateKey, coinType)
 	return privateKey, address, err
 }
 

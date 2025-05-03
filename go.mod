@@ -9,7 +9,6 @@ require (
 	github.com/btcsuite/btcd/chaincfg/chainhash v1.1.0
 	github.com/btcsuite/btcutil v0.0.0-20190425235716-9e5f4b9a998d
 	github.com/ethereum/go-ethereum v1.15.0
-	github.com/fbsobreira/gotron-sdk v0.0.0-20230907131216-1e824406fe8c
 	github.com/google/uuid v1.3.0
 	github.com/miguelmota/go-ethereum-hdwallet v0.1.3
 	github.com/mssola/useragent v1.0.0
