@@ -3,6 +3,7 @@ module goUtility
 go 1.23.0
 
 require (
+	github.com/PandaManPMC/gotron-sdk v1.0.0
 	github.com/btcsuite/btcd v0.24.2
 	github.com/btcsuite/btcd/btcec/v2 v2.3.4
 	github.com/btcsuite/btcd/btcutil v1.1.5
@@ -17,7 +18,6 @@ require (
 )
 
 require (
-	github.com/PandaManPMC/gotron-sdk v1.0.0 // indirect
 	github.com/bits-and-blooms/bitset v1.17.0 // indirect
 	github.com/btcsuite/btclog v0.0.0-20170628155309-84c8d2346e9f // indirect
 	github.com/consensys/bavard v0.1.22 // indirect
