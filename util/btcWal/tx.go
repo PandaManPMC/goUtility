@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/btcsuite/btcd/btcec/v2"
+	"github.com/btcsuite/btcd/btcec/v2/ecdsa"
 	"github.com/btcsuite/btcd/txscript"
 	"github.com/btcsuite/btcd/wire"
 )
@@ -21,6 +22,56 @@ func Size(txHex string) (int, error) {
 	// 获取交易大小
 	txSize := tx.SerializeSize()
 	return txSize, nil
+}
+
+// TXCompressedSize 压缩公钥组成的交易的 size，用于计算 fee
+func TXCompressedSize(txBuild *TransactionBuilder, privateKeyStr string) (size int, err error) {
+	privateBytes, err := hex.DecodeString(privateKeyStr)
+	if nil != err {
+		return 0, err
+	}
+	_, pubKey := btcec.PrivKeyFromBytes(privateBytes)
+
+	pubKeyMap := make(map[int]string)
+	pubKeyMap[0] = hex.EncodeToString(pubKey.SerializeCompressed())
+	txHex, _, err := txBuild.UnSignedTx(pubKeyMap)
+	if nil != err {
+		return 0, err
+	}
+
+	size, err = Size(txHex)
+	return size, nil
+}
+
+// SignTxLegacyCompressed 基于压缩的公钥地址，签名交易获得 hex
+func SignTxLegacyCompressed(txBuild *TransactionBuilder, privateKeyStr string) (txHex, txId string, err error) {
+	privateBytes, err := hex.DecodeString(privateKeyStr)
+	if nil != err {
+		return "", "", err
+	}
+
+	prvKey, pubKey := btcec.PrivKeyFromBytes(privateBytes)
+
+	pubKeyMap := make(map[int]string)
+	pubKeyMap[0] = hex.EncodeToString(pubKey.SerializeCompressed())
+	txHex, hashes, err := txBuild.UnSignedTx(pubKeyMap)
+	if nil != err {
+		return "", "", err
+	}
+
+	signatureMap := make(map[int]string)
+	for i, h := range hashes {
+		sign := ecdsa.Sign(prvKey, RemoveZeroHex(h))
+		signatureMap[i] = hex.EncodeToString(sign.Serialize())
+	}
+
+	txHex, err = SignTx(txHex, pubKeyMap, signatureMap)
+	if nil != err {
+		return "", "", err
+	}
+
+	txId, err = CalcTxID(txHex)
+	return txHex, txId, err
 }
 
 // SignTx 签名交易，地址默认是由压缩公钥生成
