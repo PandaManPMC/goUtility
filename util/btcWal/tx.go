@@ -24,12 +24,16 @@ func Size(txHex string) (int, error) {
 	return txSize, nil
 }
 
-// TXCompressedSize 压缩公钥组成的交易的 size，用于计算 fee
-func TXCompressedSize(txBuild *TransactionBuilder, privateKeyStr string) (size int, err error) {
+func TXCompressedSizePkStr(txBuild *TransactionBuilder, privateKeyStr string) (size int, err error) {
 	privateBytes, err := hex.DecodeString(privateKeyStr)
 	if nil != err {
 		return 0, err
 	}
+	return TXCompressedSize(txBuild, privateBytes)
+}
+
+// TXCompressedSize 压缩公钥组成的交易的 size，用于计算 fee
+func TXCompressedSize(txBuild *TransactionBuilder, privateBytes []byte) (size int, err error) {
 	_, pubKey := btcec.PrivKeyFromBytes(privateBytes)
 
 	pubKeyMap := make(map[int]string)
@@ -43,13 +47,16 @@ func TXCompressedSize(txBuild *TransactionBuilder, privateKeyStr string) (size i
 	return size, nil
 }
 
-// SignTxLegacyCompressed 基于压缩的公钥地址，签名交易获得 hex
-func SignTxLegacyCompressed(txBuild *TransactionBuilder, privateKeyStr string) (txHex, txId string, err error) {
+func SignTxLegacyCompressedPKStr(txBuild *TransactionBuilder, privateKeyStr string) (txHex, txId string, err error) {
 	privateBytes, err := hex.DecodeString(privateKeyStr)
 	if nil != err {
 		return "", "", err
 	}
+	return SignTxLegacyCompressed(txBuild, privateBytes)
+}
 
+// SignTxLegacyCompressed 基于压缩的公钥地址，签名交易获得 hex
+func SignTxLegacyCompressed(txBuild *TransactionBuilder, privateBytes []byte) (txHex, txId string, err error) {
 	prvKey, pubKey := btcec.PrivKeyFromBytes(privateBytes)
 
 	pubKeyMap := make(map[int]string)
