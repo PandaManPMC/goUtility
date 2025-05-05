@@ -60,7 +60,9 @@ func SignTxLegacyCompressed(txBuild *TransactionBuilder, privateBytes []byte) (t
 	prvKey, pubKey := btcec.PrivKeyFromBytes(privateBytes)
 
 	pubKeyMap := make(map[int]string)
-	pubKeyMap[0] = hex.EncodeToString(pubKey.SerializeCompressed())
+	for i := 0; i < len(txBuild.inputs); i++ {
+		pubKeyMap[i] = hex.EncodeToString(pubKey.SerializeCompressed())
+	}
 	txHex, hashes, err := txBuild.UnSignedTx(pubKeyMap)
 	if nil != err {
 		return "", "", err
