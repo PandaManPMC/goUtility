@@ -47,6 +47,7 @@ const (
 	BTCAddress  byte = 0x00
 	LTCAddress  byte = 0x30
 	DogeAddress byte = 0x1E
+	RVNAddress  byte = 0x3C
 )
 
 func GenerateAddressByBTC(privateKey *ecdsa.PrivateKey) (string, error) {
@@ -123,6 +124,14 @@ func GenerateAddressCompressed(privateKey *ecdsa.PrivateKey, coinType byte) (str
 	return address, nil
 }
 
+//func GenerateAddressByRVN(privateKey *ecdsa.PrivateKey) (string, error) {
+//	return GenerateAddress(privateKey, RVNAddress)
+//}
+//
+//func GenerateAddressCompressedByRVN(privateKey *ecdsa.PrivateKey) (string, error) {
+//	return GenerateAddressCompressed(privateKey, RVNAddress)
+//}
+
 // ImportWallet
 // coinType 比特币（BTC）：0 莱特币（LTC）：2  狗狗币（DOGE）：3
 func ImportWallet(mnemonic string, coinType util.HDCoinType, index int) (privateKey *ecdsa.PrivateKey, address string, err error) {
@@ -138,12 +147,14 @@ func ImportWallet(mnemonic string, coinType util.HDCoinType, index int) (private
 
 	var coinByte byte = 0x00
 	switch coinType {
-	case 0:
+	case util.BTCHDCoinType:
 		coinByte = 0x00
-	case 2:
+	case util.LTCHDCoinType:
 		coinByte = 0x30
-	case 3:
+	case util.DOGEHDCoinType:
 		coinByte = 0x1E
+	case util.RVNHDCoinType: // RVN
+		coinByte = 0x3C
 	default:
 		return nil, "", errors.New("invalid coinType")
 	}
@@ -154,12 +165,14 @@ func ImportWallet(mnemonic string, coinType util.HDCoinType, index int) (private
 func GenerateAddressCompressedByPK(privateKey *ecdsa.PrivateKey, coinType util.HDCoinType) (string, error) {
 	var coinByte byte = 0x00
 	switch coinType {
-	case 0:
+	case util.BTCHDCoinType:
 		coinByte = 0x00
-	case 2:
+	case util.LTCHDCoinType:
 		coinByte = 0x30
-	case 3:
+	case util.DOGEHDCoinType:
 		coinByte = 0x1E
+	case util.RVNHDCoinType: // RVN
+		coinByte = 0x3C
 	default:
 		return "", errors.New("invalid coinType")
 	}

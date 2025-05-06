@@ -131,6 +131,12 @@ func TestPrivateKetToAddr(t *testing.T) {
 	t.Log(addr)
 	t.Log(IsValidDOGEAddress(addr))
 
+	addr, err = GenerateAddressCompressed(pk, RVNAddress)
+	if nil != err {
+		t.Fatal(err)
+	}
+	t.Log(addr)
+
 }
 
 func TestValidAddress(t *testing.T) {

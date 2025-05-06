@@ -1,6 +1,7 @@
 package dogeNetParams
 
 import (
+	"fmt"
 	"math/big"
 	"time"
 
@@ -26,6 +27,12 @@ const (
 	// MainNet represents the main dogecoin network.
 	MainNet wire.BitcoinNet = 0xc0c0c0c0
 )
+
+func init() {
+	if e := chaincfg.Register(&DogeMainNetParams); nil != e {
+		fmt.Println(e)
+	}
+}
 
 // DogeMainNetParams defines the network parameters for the main DogeCoin network.
 var DogeMainNetParams = chaincfg.Params{
