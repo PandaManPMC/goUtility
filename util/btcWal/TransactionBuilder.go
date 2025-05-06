@@ -271,7 +271,6 @@ func (build *TransactionBuilder) UnSignedTx(pubKeyMap map[int]string) (string, m
 	if len(build.inputs) == 0 || len(build.outputs) == 0 {
 		return "", nil, fmt.Errorf("input or output miss")
 	}
-
 	tx := build.tx
 	var scriptArray [][]byte
 	for i := 0; i < len(build.inputs); i++ {
