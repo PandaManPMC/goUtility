@@ -132,3 +132,14 @@ func TestPrivateKetToAddr(t *testing.T) {
 	t.Log(IsValidDOGEAddress(addr))
 
 }
+
+func TestValidAddress(t *testing.T) {
+	t.Log(IsValidLTCAddress("LLoRk2grZxuRkxaRvxVP7eSGWLwZGU1yx8"))
+	t.Log(IsValidLTCAddress("ltc1q4jamujuysk7mxm3qpzl387qghktcx07vmnklfz"))
+
+	t.Log(IsValidLTCAddress("LLoRk2grZxuRkxaRvxVP7eSGWLwZGU1yx81"))
+	t.Log(IsValidLTCAddress("LLoRk2grZxuRkxaRvxVP7eSGWLwZGU1yx0"))
+
+	//格式看上去没问题，但 Bech32 地址的 最后6位是校验和，它通过 polymod 算法校验前面部分是否正确。
+	t.Log(IsValidLTCAddress("ltc1q4jamujuysk7mxm3qpzl387qghktcx07vmnklf1"))
+}

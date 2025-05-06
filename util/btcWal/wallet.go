@@ -4,12 +4,15 @@ import (
 	"crypto/ecdsa"
 	"crypto/sha256"
 	"errors"
+	"fmt"
 	"github.com/btcsuite/btcd/btcutil"
 	"github.com/btcsuite/btcd/btcutil/base58"
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/ethereum/go-ethereum/crypto"
 	"goUtility/util"
 	"golang.org/x/crypto/ripemd160"
+	"math/big"
+	"strings"
 )
 
 // 通过路径派生钱包地址
@@ -181,14 +184,18 @@ func IsValidBTCAddress(address string) bool {
 
 // IsValidLTCAddress 验证莱特币地址是否合法
 func IsValidLTCAddress(address string) bool {
-	// 莱特币的主网参数需要自定义，以下是示例参数
-	ltcParams := &chaincfg.Params{
-		PubKeyHashAddrID: 0x30, // 莱特币地址前缀为 L（0x30）
-		ScriptHashAddrID: 0x32, // 莱特币脚本地址前缀为 M（0x32）
-		Bech32HRPSegwit:  "ltc",
+	if ValidateLitecoinAddress(address) {
+		return true
 	}
-	_, err := btcutil.DecodeAddress(address, ltcParams)
-	return err == nil
+	return validateLitecoinBech32(address)
+	// 莱特币的主网参数
+	//ltcParams := &chaincfg.Params{
+	//	PubKeyHashAddrID: 0x30, // 莱特币地址前缀为 L（0x30）
+	//	ScriptHashAddrID: 0x32, // 莱特币脚本地址前缀为 M（0x32）
+	//	Bech32HRPSegwit:  "ltc",
+	//}
+	//_, err := btcutil.DecodeAddress(address, ltcParams)
+	//return err == nil
 }
 
 // IsValidDOGEAddress 验证狗狗币地址是否合法
@@ -201,4 +208,146 @@ func IsValidDOGEAddress(address string) bool {
 	}
 	_, err := btcutil.DecodeAddress(address, dogeParams)
 	return err == nil
+}
+
+var base58Alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+
+// Base58 解码
+func base58Decode(input string) ([]byte, error) {
+	result := big.NewInt(0)
+	base := big.NewInt(58)
+	for _, r := range input {
+		charIndex := int64(strings.IndexRune(base58Alphabet, r))
+		if charIndex < 0 {
+			return nil, fmt.Errorf("invalid character: %c", r)
+		}
+		result.Mul(result, base)
+		result.Add(result, big.NewInt(charIndex))
+	}
+
+	decoded := result.Bytes()
+
+	// 添加前缀 0（对应 '1'）填补长度
+	leadingZeros := 0
+	for _, r := range input {
+		if r != '1' {
+			break
+		}
+		leadingZeros++
+	}
+
+	return append(make([]byte, leadingZeros), decoded...), nil
+}
+
+// 获取双重 SHA256 校验和前4字节
+func checksum(data []byte) []byte {
+	first := sha256.Sum256(data)
+	second := sha256.Sum256(first[:])
+	return second[:4]
+}
+
+// ValidateLitecoinAddress 验证 Litecoin 地址合法性
+func ValidateLitecoinAddress(address string) bool {
+	decoded, err := base58Decode(address)
+	if err != nil || len(decoded) < 5 {
+		return false
+	}
+
+	// 拆分 payload 和校验和
+	payload := decoded[:len(decoded)-4]
+	checksumBytes := decoded[len(decoded)-4:]
+
+	// 校验校验和
+	expectedChecksum := checksum(payload)
+	for i := 0; i < 4; i++ {
+		if checksumBytes[i] != expectedChecksum[i] {
+			return false
+		}
+	}
+
+	// 校验前缀字节（Version Byte）
+	// 主网地址版本号：
+	// P2PKH：0x30 (48, 即 L/M 开头)
+	// P2SH：0x32 (50, 即 3 开头)
+	version := payload[0]
+	if version != 0x30 && version != 0x32 {
+		return false
+	}
+
+	return true
+}
+
+var bech32Charset = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
+
+// Bech32 polymod constant
+var bech32Gen = []int{0x3b6a57b2, 0x26508e6d, 0x1ea119fa, 0x3d4233dd, 0x2a1462b3}
+
+// Expand HRP
+func hrpExpand(hrp string) []int {
+	var result []int
+	for _, c := range hrp {
+		result = append(result, int(c>>5))
+	}
+	result = append(result, 0)
+	for _, c := range hrp {
+		result = append(result, int(c&31))
+	}
+	return result
+}
+
+// Polymod checksum
+func polymod(values []int) int {
+	chk := 1
+	for _, v := range values {
+		top := chk >> 25
+		chk = ((chk & 0x1ffffff) << 5) ^ v
+		for i := 0; i < 5; i++ {
+			if (top>>i)&1 == 1 {
+				chk ^= bech32Gen[i]
+			}
+		}
+	}
+	return chk
+}
+
+// Verify checksum
+func verifyBech32Checksum(hrp string, data []int) bool {
+	return polymod(append(hrpExpand(hrp), data...)) == 1
+}
+
+// Decode Bech32
+func decodeBech32(addr string) (string, []int, error) {
+	addr = strings.ToLower(addr)
+	if len(addr) < 8 || len(addr) > 90 {
+		return "", nil, errors.New("invalid length")
+	}
+
+	pos := strings.LastIndexByte(addr, '1')
+	if pos < 1 || pos+7 > len(addr) {
+		return "", nil, errors.New("invalid position for '1'")
+	}
+
+	hrp := addr[:pos]
+	dataPart := addr[pos+1:]
+
+	var data []int
+	for _, c := range dataPart {
+		idx := strings.IndexRune(bech32Charset, c)
+		if idx < 0 {
+			return "", nil, fmt.Errorf("invalid character: %c", c)
+		}
+		data = append(data, idx)
+	}
+
+	if !verifyBech32Checksum(hrp, data) {
+		return "", nil, errors.New("invalid checksum")
+	}
+
+	return hrp, data[:len(data)-6], nil // data (excluding checksum)
+}
+
+// Litecoin Bech32 地址验证器
+func validateLitecoinBech32(addr string) bool {
+	hrp, _, err := decodeBech32(addr)
+	return err == nil && hrp == "ltc"
 }

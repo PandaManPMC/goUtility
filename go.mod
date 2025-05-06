@@ -13,7 +13,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/miguelmota/go-ethereum-hdwallet v0.1.3
 	github.com/mssola/useragent v1.0.0
-	golang.org/x/crypto v0.36.0
+	golang.org/x/crypto v0.38.0
 	google.golang.org/protobuf v1.36.6
 )
 
@@ -33,6 +33,6 @@ require (
 	github.com/supranational/blst v0.3.14 // indirect
 	github.com/tyler-smith/go-bip39 v1.1.0 // indirect
 	golang.org/x/sync v0.11.0 // indirect
-	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/sys v0.33.0 // indirect
 	rsc.io/tmplfunc v0.0.3 // indirect
 )
