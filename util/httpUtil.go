@@ -229,7 +229,7 @@ func (*httpUtil) PostClient(u string, header map[string]string, inBody []byte,
 
 	req, err := http.NewRequest("POST", u, bytes.NewReader(inBody))
 	if nil != err {
-		return nil, err
+		return nil, errors.New(fmt.Sprintf("url=%s err=%s", u, err.Error()))
 	}
 
 	if nil == header || 0 == len(header) {
