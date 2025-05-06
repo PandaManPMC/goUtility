@@ -124,14 +124,6 @@ func GenerateAddressCompressed(privateKey *ecdsa.PrivateKey, coinType byte) (str
 	return address, nil
 }
 
-//func GenerateAddressByRVN(privateKey *ecdsa.PrivateKey) (string, error) {
-//	return GenerateAddress(privateKey, RVNAddress)
-//}
-//
-//func GenerateAddressCompressedByRVN(privateKey *ecdsa.PrivateKey) (string, error) {
-//	return GenerateAddressCompressed(privateKey, RVNAddress)
-//}
-
 // ImportWallet
 // coinType 比特币（BTC）：0 莱特币（LTC）：2  狗狗币（DOGE）：3
 func ImportWallet(mnemonic string, coinType util.HDCoinType, index int) (privateKey *ecdsa.PrivateKey, address string, err error) {
@@ -218,6 +210,16 @@ func IsValidDOGEAddress(address string) bool {
 		PubKeyHashAddrID: 0x1e, // 狗狗币地址前缀为 D（0x1e）
 		ScriptHashAddrID: 0x16, // 狗狗币脚本地址前缀为 9（0x16）
 		Bech32HRPSegwit:  "doge",
+	}
+	_, err := btcutil.DecodeAddress(address, dogeParams)
+	return err == nil
+}
+
+func IsValidRVNAddress(address string) bool {
+	// 狗狗币的主网参数需要自定义，以下是示例参数
+	dogeParams := &chaincfg.Params{
+		PubKeyHashAddrID: 0x3c,
+		ScriptHashAddrID: 0x7a,
 	}
 	_, err := btcutil.DecodeAddress(address, dogeParams)
 	return err == nil

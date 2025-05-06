@@ -148,4 +148,6 @@ func TestValidAddress(t *testing.T) {
 
 	//格式看上去没问题，但 Bech32 地址的 最后6位是校验和，它通过 polymod 算法校验前面部分是否正确。
 	t.Log(IsValidLTCAddress("ltc1q4jamujuysk7mxm3qpzl387qghktcx07vmnklf1"))
+
+	t.Log(IsValidRVNAddress("RBLfC7xp6PowS1a6qt9XwPp5ZqZouCvAFo"))
 }
