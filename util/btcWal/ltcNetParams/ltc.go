@@ -5,7 +5,6 @@
 package ltcNetParams
 
 import (
-	"fmt"
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	"math/big"
@@ -68,11 +67,11 @@ const (
 	DefinedDeployments
 )
 
-func init() {
-	if e := chaincfg.Register(&MainNetParams); nil != e {
-		fmt.Println(e)
-	}
-}
+//func init() {
+//	if e := chaincfg.Register(&MainNetParams); nil != e {
+//		fmt.Println(e)
+//	}
+//}
 
 // MainNetParams defines the network parameters for the main Litecoin network.
 var MainNetParams = chaincfg.Params{

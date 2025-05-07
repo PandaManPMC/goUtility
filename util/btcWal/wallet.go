@@ -204,7 +204,7 @@ func IsValidLTCAddress(address string) bool {
 // IsValidDOGEAddress 验证狗狗币地址是否合法
 func IsValidDOGEAddress(address string) bool {
 	// 狗狗币的主网参数需要自定义，以下是示例参数
-	_, err := btcutil.DecodeAddress(address, &dogeNetParams.DogeMainNetParams)
+	_, err := btcutil.DecodeAddress(address, &dogeNetParams.MainNetParams)
 	return err == nil
 }
 

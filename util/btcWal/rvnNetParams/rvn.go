@@ -1,7 +1,6 @@
 package rvnNetParams
 
 import (
-	"fmt"
 	"github.com/btcsuite/btcd/chaincfg"
 	"math/big"
 	"time"
@@ -17,11 +16,11 @@ var (
 	mainPowLimit = new(big.Int).Sub(new(big.Int).Lsh(bigOne, 224), bigOne)
 )
 
-func init() {
-	if e := chaincfg.Register(&MainNetParams); nil != e {
-		fmt.Println(e)
-	}
-}
+//func init() {
+//	if e := chaincfg.Register(&MainNetParams); nil != e {
+//		fmt.Println(e)
+//	}
+//}
 
 // MainNetParams defines the network parameters for the main Ravencoin network.
 var MainNetParams = chaincfg.Params{
