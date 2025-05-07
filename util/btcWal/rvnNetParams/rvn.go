@@ -7,11 +7,6 @@ import (
 	"time"
 )
 
-const (
-	// MainNet represents the main ravencoin network.
-	MainNet = 0x5241564e
-)
-
 var (
 	// bigOne is 1 represented as a big.Int.  It is defined here to avoid
 	// the overhead of creating it multiple times.
@@ -31,7 +26,7 @@ func init() {
 // MainNetParams defines the network parameters for the main Ravencoin network.
 var MainNetParams = chaincfg.Params{
 	Name:        "mainnet",
-	Net:         MainNet,
+	Net:         0x5241564e,
 	DefaultPort: "8767",
 	DNSSeeds: []chaincfg.DNSSeed{
 		{"seed-raven.biractivate.com", false},

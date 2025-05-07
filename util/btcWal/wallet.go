@@ -10,6 +10,9 @@ import (
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/ethereum/go-ethereum/crypto"
 	"goUtility/util"
+	"goUtility/util/btcWal/dogeNetParams"
+	"goUtility/util/btcWal/ltcNetParams"
+	"goUtility/util/btcWal/rvnNetParams"
 	"golang.org/x/crypto/ripemd160"
 	"math/big"
 	"strings"
@@ -189,39 +192,25 @@ func IsValidBTCAddress(address string) bool {
 
 // IsValidLTCAddress 验证莱特币地址是否合法
 func IsValidLTCAddress(address string) bool {
-	if ValidateLitecoinAddress(address) {
-		return true
-	}
-	return validateLitecoinBech32(address)
-	// 莱特币的主网参数
-	//ltcParams := &chaincfg.Params{
-	//	PubKeyHashAddrID: 0x30, // 莱特币地址前缀为 L（0x30）
-	//	ScriptHashAddrID: 0x32, // 莱特币脚本地址前缀为 M（0x32）
-	//	Bech32HRPSegwit:  "ltc",
+	//if ValidateLitecoinAddress(address) {
+	//	return true
 	//}
-	//_, err := btcutil.DecodeAddress(address, ltcParams)
-	//return err == nil
+	//return validateLitecoinBech32(address)
+
+	_, err := btcutil.DecodeAddress(address, &ltcNetParams.MainNetParams)
+	return err == nil
 }
 
 // IsValidDOGEAddress 验证狗狗币地址是否合法
 func IsValidDOGEAddress(address string) bool {
 	// 狗狗币的主网参数需要自定义，以下是示例参数
-	dogeParams := &chaincfg.Params{
-		PubKeyHashAddrID: 0x1e, // 狗狗币地址前缀为 D（0x1e）
-		ScriptHashAddrID: 0x16, // 狗狗币脚本地址前缀为 9（0x16）
-		Bech32HRPSegwit:  "doge",
-	}
-	_, err := btcutil.DecodeAddress(address, dogeParams)
+	_, err := btcutil.DecodeAddress(address, &dogeNetParams.DogeMainNetParams)
 	return err == nil
 }
 
 func IsValidRVNAddress(address string) bool {
 	// 狗狗币的主网参数需要自定义，以下是示例参数
-	dogeParams := &chaincfg.Params{
-		PubKeyHashAddrID: 0x3c,
-		ScriptHashAddrID: 0x7a,
-	}
-	_, err := btcutil.DecodeAddress(address, dogeParams)
+	_, err := btcutil.DecodeAddress(address, &rvnNetParams.MainNetParams)
 	return err == nil
 }
 

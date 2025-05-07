@@ -331,6 +331,7 @@ func (build *TransactionBuilder) UnSignedTx(pubKeyMap map[int]string) (string, m
 		tx.TxIn[i].SignatureScript = scriptBuilder
 
 		//tx.TxIn[i].Sequence = 4294967294
+		//tx.TxIn[i].Sequence = 0xffffffff
 	}
 	//tx.LockTime = uint32(time.Now().Unix()) - 60
 	buf := bytes.NewBuffer(make([]byte, 0, tx.SerializeSize()))
