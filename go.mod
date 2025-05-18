@@ -3,7 +3,6 @@ module goUtility
 go 1.23.0
 
 require (
-	github.com/PandaManPMC/gotron-sdk v1.0.0
 	github.com/btcsuite/btcd v0.24.2
 	github.com/btcsuite/btcd/btcutil v1.1.6
 	github.com/btcsuite/btcd/chaincfg/chainhash v1.1.0
@@ -13,7 +12,6 @@ require (
 	github.com/miguelmota/go-ethereum-hdwallet v0.1.3
 	github.com/mssola/useragent v1.0.0
 	golang.org/x/crypto v0.38.0
-	google.golang.org/protobuf v1.36.6
 )
 
 require (
