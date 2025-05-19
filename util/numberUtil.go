@@ -1,6 +1,7 @@
 package util
 
 import (
+	"encoding/binary"
 	"fmt"
 	"math/big"
 	"regexp"
@@ -352,4 +353,13 @@ func (instance *numberUtil) Abs(x int) int {
 		return -x
 	}
 	return x
+}
+
+func (instance *numberUtil) BytesToUint64(b []byte) uint64 {
+	// 如果长度不足 8 字节，需先填充（根据具体需求：前补0或后补0）
+	if len(b) < 8 {
+		padding := make([]byte, 8-len(b))
+		b = append(padding, b...) // 这里是前补0，按大端序处理
+	}
+	return binary.BigEndian.Uint64(b)
 }
