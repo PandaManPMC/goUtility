@@ -338,3 +338,19 @@ func TestLess(t *testing.T) {
 	// false 请使用这个
 	t.Log(Float256LessByStr(a, fmt.Sprintf("%f", b)))
 }
+
+func TestFloat256Less1E9(t *testing.T) {
+	a, isOk := big.NewInt(0).SetString("1999", 10)
+	t.Log(isOk)
+	t.Log(a)
+
+	t.Log(a.Int64())
+	t.Log(a.String())
+
+	b, isOk := big.NewInt(0).SetString("1999", 10)
+	t.Log(isOk)
+
+	a.Sub(b, a)
+	t.Log(a.String())
+
+}
