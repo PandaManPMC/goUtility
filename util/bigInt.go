@@ -2,6 +2,19 @@ package util
 
 import "math/big"
 
+// NewBigIntByStringPositive val 必须是整数并且大于等于 0（不可为负数）
+func NewBigIntByStringPositive(val string) (*big.Int, bool) {
+	v, isOk := big.NewInt(0).SetString(val, 10)
+	if !isOk {
+		return nil, false
+	}
+	isLessZero := BigIntLessThanZero(v)
+	if isLessZero {
+		return nil, false
+	}
+	return v, true
+}
+
 // BigIntAdd 加法（不会影响原值），return a+b 不影响 a 和 b
 func BigIntAdd(a, b *big.Int) big.Int {
 	//c := a.Add(&a, &b) // 会影响原来 a 的值，弃用。
@@ -71,7 +84,7 @@ func BigIntGreaterStr(a1, b1 string) bool {
 
 // BigIntLess 小于 【a < b】 true
 // 入参 big.Float 需要是同一个类型转换，如果是 "0.1" 与 0.1 的 big.Float 进行比较， 0.1 大于 "0.1"
-func BigIntLess(a, b big.Float) bool {
+func BigIntLess(a, b big.Int) bool {
 	if -1 == a.Cmp(&b) {
 		return true
 	}
@@ -124,7 +137,7 @@ func BigIntNotZero(a *big.Int) bool {
 
 // BigIntBiggerThanZero 大于0 a > 0 则 true
 func BigIntBiggerThanZero(a *big.Int) bool {
-	if 0 > big.NewInt(0).Cmp(a) {
+	if 1 == a.Cmp(big.NewInt(0)) {
 		return true
 	}
 	return false
@@ -132,7 +145,7 @@ func BigIntBiggerThanZero(a *big.Int) bool {
 
 // BigIntLessThanZero 小于0 a < 0 则 true
 func BigIntLessThanZero(a *big.Int) bool {
-	if 0 < big.NewInt(0).Cmp(a) {
+	if -1 == a.Cmp(big.NewInt(0)) {
 		return true
 	}
 	return false
@@ -140,7 +153,7 @@ func BigIntLessThanZero(a *big.Int) bool {
 
 // BigIntLessOrEqualsZero 若 a 小于等于 0 则返回 true
 func BigIntLessOrEqualsZero(a *big.Int) bool {
-	if 0 >= big.NewInt(0).Cmp(a) {
+	if 0 >= a.Cmp(big.NewInt(0)) {
 		return true
 	}
 	return false

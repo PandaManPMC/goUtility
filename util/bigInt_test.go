@@ -38,6 +38,14 @@ func TestBigIntAdd(t *testing.T) {
 
 }
 
+func TestBigIntStr(t *testing.T) {
+
+	t.Log(big.NewInt(0).SetString("1", 10))
+	t.Log(big.NewInt(0).SetString("1.2", 10))
+	t.Log(big.NewInt(0).SetString("0.5", 10))
+
+}
+
 func TestBigInt2(t *testing.T) {
 	a := big.NewInt(100)
 	b := big.NewInt(5)
@@ -47,5 +55,21 @@ func TestBigInt2(t *testing.T) {
 
 	t.Log(BigIntEquals(a, b))
 	t.Log(BigIntEquals(a, big.NewInt(100)))
+
+	t.Log("----------------- NewBigIntByStringPositive")
+	t.Log(NewBigIntByStringPositive("1"))
+	t.Log(NewBigIntByStringPositive("0"))
+	t.Log(NewBigIntByStringPositive("1.4"))
+	t.Log(NewBigIntByStringPositive("-1"))
+
+	t.Log("----------------- BigIntLessOrEqualsZero")
+
+	t.Log(BigIntLessOrEqualsZero(big.NewInt(10)))
+	t.Log(BigIntLessOrEqualsZero(big.NewInt(0)))
+	t.Log(BigIntLessOrEqualsZero(big.NewInt(-1)))
+	t.Log("----------------- BigIntBiggerThanZero")
+	t.Log(BigIntBiggerThanZero(big.NewInt(10)))
+	t.Log(BigIntBiggerThanZero(big.NewInt(0)))
+	t.Log(BigIntBiggerThanZero(big.NewInt(-1)))
 
 }

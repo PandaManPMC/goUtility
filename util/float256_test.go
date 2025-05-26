@@ -353,4 +353,15 @@ func TestFloat256Less1E9(t *testing.T) {
 	a.Sub(b, a)
 	t.Log(a.String())
 
+	t.Log("------------")
+	t.Log(Float256LessOrEqualsZero(*NewFloat256ByStringMust("1")))
+	t.Log(Float256LessOrEqualsZero(*NewFloat256ByStringMust("0")))
+	t.Log(Float256LessOrEqualsZero(*NewFloat256ByStringMust("-1")))
+
+	t.Log("------------")
+
+	t.Log(Float256Less(*NewFloat256ByStringMust("145000000000000000000000000000"), *NewFloat256ByStringMust("145000000000000000000000000000")))
+	i1, _ := big.NewInt(0).SetString("145000000000000000000000000000", 10)
+	i2, _ := big.NewInt(0).SetString("145000000000000000000000000000", 10)
+	t.Log(BigIntLess(*i1, *i2))
 }
