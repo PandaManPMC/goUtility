@@ -1,6 +1,18 @@
 package util
 
-import "math/big"
+import (
+	"errors"
+	"fmt"
+	"math/big"
+)
+
+func NewBigInt(val string) (*big.Int, error) {
+	v, isOk := big.NewInt(0).SetString(val, 10)
+	if isOk {
+		return nil, errors.New(fmt.Sprintf("%s format int is error", val))
+	}
+	return v, nil
+}
 
 // NewBigIntByStringPositive val 必须是整数并且大于等于 0（不可为负数）
 func NewBigIntByStringPositive(val string) (*big.Int, bool) {
