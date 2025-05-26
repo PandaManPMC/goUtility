@@ -1,6 +1,8 @@
 package util
 
 import (
+	"fmt"
+	"github.com/shopspring/decimal"
 	"math/big"
 	"testing"
 )
@@ -76,4 +78,14 @@ func TestBigInt2(t *testing.T) {
 
 func TestNewBigInt(t *testing.T) {
 	t.Log(NewBigInt("145000000000000000000000000000"))
+	i1, _ := big.NewInt(0).SetString("145000000000000000000000000000", 10)
+	i2, _ := big.NewInt(0).SetString("145000000000000000000000000000", 10)
+	t.Log(BigIntLess(i1, i2))
+
+	a := decimal.NewFromFloat(1)
+	b := decimal.NewFromFloat(3)
+
+	result := a.Div(b).Round(8)
+	fmt.Println(result)
+
 }
