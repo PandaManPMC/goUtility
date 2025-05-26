@@ -8,7 +8,7 @@ import (
 
 func NewBigInt(val string) (*big.Int, error) {
 	v, isOk := big.NewInt(0).SetString(val, 10)
-	if isOk {
+	if !isOk {
 		return nil, errors.New(fmt.Sprintf("%s format int is error", val))
 	}
 	return v, nil

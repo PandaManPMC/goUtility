@@ -73,3 +73,7 @@ func TestBigInt2(t *testing.T) {
 	t.Log(BigIntBiggerThanZero(big.NewInt(-1)))
 
 }
+
+func TestNewBigInt(t *testing.T) {
+	t.Log(NewBigInt("145000000000000000000000000000"))
+}
