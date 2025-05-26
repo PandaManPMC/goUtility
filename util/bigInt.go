@@ -84,8 +84,8 @@ func BigIntGreaterStr(a1, b1 string) bool {
 
 // BigIntLess 小于 【a < b】 true
 // 入参 big.Float 需要是同一个类型转换，如果是 "0.1" 与 0.1 的 big.Float 进行比较， 0.1 大于 "0.1"
-func BigIntLess(a, b big.Int) bool {
-	if -1 == a.Cmp(&b) {
+func BigIntLess(a, b *big.Int) bool {
+	if -1 == a.Cmp(b) {
 		return true
 	}
 	return false
