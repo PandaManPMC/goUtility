@@ -15,6 +15,14 @@ func DecimalNewFromStringMust(a string) decimal.Decimal {
 	return d
 }
 
+func DecimalNewFromStringPanic(a string) decimal.Decimal {
+	d, err := decimal.NewFromString(a)
+	if nil != err {
+		panic(err)
+	}
+	return d
+}
+
 func DecimalIsZero(a decimal.Decimal) bool {
 	if "0" == a.String() {
 		return true
@@ -84,6 +92,14 @@ func DecimalDivRoundDown8Str(a, b string) (string, error) {
 	return result.String(), nil
 }
 
+func DecimalGreaterThanOrEqualStrPanic(a, b string) bool {
+	is, err := DecimalGreaterThanOrEqualStr(a, b)
+	if nil != err {
+		panic(err)
+	}
+	return is
+}
+
 func DecimalGreaterThanOrEqualStr(a, b string) (bool, error) {
 	c, err := decimal.NewFromString(a)
 	if nil != err {
@@ -112,6 +128,31 @@ func DecimalLessThanStr(a, b string) (bool, error) {
 	}
 
 	if c.LessThan(d) {
+		return true, nil
+	}
+
+	return false, nil
+}
+
+func DecimalLessThanOrEqualStrPanic(a, b string) bool {
+	is, err := DecimalLessThanOrEqualStr(a, b)
+	if nil != err {
+		panic(err)
+	}
+	return is
+}
+
+func DecimalLessThanOrEqualStr(a, b string) (bool, error) {
+	c, err := decimal.NewFromString(a)
+	if nil != err {
+		return false, err
+	}
+	d, err := decimal.NewFromString(b)
+	if nil != err {
+		return false, err
+	}
+
+	if c.LessThanOrEqual(d) {
 		return true, nil
 	}
 
