@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// DecimalErr string 数值转 decimal，支持 0x 开头
 func DecimalErr(val string) (decimal.Decimal, error) {
 	if strings.HasPrefix(val, "0x") {
 		val = val[2:]
@@ -40,12 +41,12 @@ func DecimalNewFromFloat(a float64) decimal.Decimal {
 }
 
 func DecimalNewFromStringMust(a string) decimal.Decimal {
-	d, _ := decimal.NewFromString(a)
+	d, _ := DecimalErr(a)
 	return d
 }
 
 func DecimalNewFromStringPanic(a string) decimal.Decimal {
-	d, err := decimal.NewFromString(a)
+	d, err := DecimalErr(a)
 	if nil != err {
 		panic(err)
 	}
@@ -73,11 +74,11 @@ func DecimalSubRoundDown8Str(a, b string) (string, error) {
 }
 
 func DecimalSubStr(a, b string) (decimal.Decimal, error) {
-	c, err := decimal.NewFromString(a)
+	c, err := DecimalErr(a)
 	if nil != err {
 		return c, err
 	}
-	d, err := decimal.NewFromString(b)
+	d, err := DecimalErr(b)
 	if nil != err {
 		return d, err
 	}
@@ -94,11 +95,11 @@ func DecimalAddRoundDown8Str(a, b string) (string, error) {
 }
 
 func DecimalAddStr(a, b string) (decimal.Decimal, error) {
-	c, err := decimal.NewFromString(a)
+	c, err := DecimalErr(a)
 	if nil != err {
 		return c, err
 	}
-	d, err := decimal.NewFromString(b)
+	d, err := DecimalErr(b)
 	if nil != err {
 		return d, err
 	}
@@ -108,11 +109,11 @@ func DecimalAddStr(a, b string) (decimal.Decimal, error) {
 
 // DecimalDivRoundDown8Str a/b = .8_0 string
 func DecimalDivRoundDown8Str(a, b string) (string, error) {
-	c, err := decimal.NewFromString(a)
+	c, err := DecimalErr(a)
 	if nil != err {
 		return "", err
 	}
-	d, err := decimal.NewFromString(b)
+	d, err := DecimalErr(b)
 	if nil != err {
 		return "", err
 	}
@@ -130,11 +131,11 @@ func DecimalGreaterThanOrEqualStrPanic(a, b string) bool {
 }
 
 func DecimalGreaterThanOrEqualStr(a, b string) (bool, error) {
-	c, err := decimal.NewFromString(a)
+	c, err := DecimalErr(a)
 	if nil != err {
 		return false, err
 	}
-	d, err := decimal.NewFromString(b)
+	d, err := DecimalErr(b)
 	if nil != err {
 		return false, err
 	}
@@ -147,11 +148,11 @@ func DecimalGreaterThanOrEqualStr(a, b string) (bool, error) {
 }
 
 func DecimalLessThanStr(a, b string) (bool, error) {
-	c, err := decimal.NewFromString(a)
+	c, err := DecimalErr(a)
 	if nil != err {
 		return false, err
 	}
-	d, err := decimal.NewFromString(b)
+	d, err := DecimalErr(b)
 	if nil != err {
 		return false, err
 	}
@@ -172,11 +173,11 @@ func DecimalLessThanOrEqualStrPanic(a, b string) bool {
 }
 
 func DecimalLessThanOrEqualStr(a, b string) (bool, error) {
-	c, err := decimal.NewFromString(a)
+	c, err := DecimalErr(a)
 	if nil != err {
 		return false, err
 	}
-	d, err := decimal.NewFromString(b)
+	d, err := DecimalErr(b)
 	if nil != err {
 		return false, err
 	}
