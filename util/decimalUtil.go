@@ -32,7 +32,7 @@ func DecimalIsZero(a decimal.Decimal) bool {
 
 func DecimalLessOrEquZero(a decimal.Decimal) bool {
 	v := DecimalNewFromStringMust("0")
-	return v.LessThanOrEqual(a)
+	return a.LessThanOrEqual(v)
 }
 
 func DecimalSubRoundDown8Str(a, b string) (string, error) {

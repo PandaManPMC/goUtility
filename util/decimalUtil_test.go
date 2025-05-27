@@ -21,6 +21,11 @@ func TestInt(t *testing.T) {
 	t.Log("------------------------")
 	t.Log(DecimalNewFromStringMust("0.0"))
 	t.Log(DecimalIsZero(DecimalNewFromStringMust("0.0")))
+	t.Log("------------------------")
+
+	t.Log(DecimalLessOrEquZero(DecimalNewFromStringMust("0.1")))
+	t.Log(DecimalLessOrEquZero(DecimalNewFromStringMust("0")))
+	t.Log(DecimalLessOrEquZero(DecimalNewFromStringMust("-0.5")))
 
 }
 
