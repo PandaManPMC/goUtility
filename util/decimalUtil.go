@@ -2,8 +2,75 @@ package util
 
 import "github.com/shopspring/decimal"
 
-// DecimalDivRoundStr a/b = .8 string
-func DecimalDivRoundStr(a, b string) (string, error) {
+func DecimalToP0Str(a decimal.Decimal) string {
+	return a.RoundDown(0).String()
+}
+
+func DecimalNewFromFloat(a float64) decimal.Decimal {
+	return decimal.NewFromFloat(a)
+}
+
+func DecimalNewFromStringMust(a string) decimal.Decimal {
+	d, _ := decimal.NewFromString(a)
+	return d
+}
+
+func DecimalIsZero(a decimal.Decimal) bool {
+	if "0" == a.String() {
+		return true
+	}
+	return false
+}
+
+func DecimalLessOrEquZero(a decimal.Decimal) bool {
+	v := DecimalNewFromStringMust("0")
+	return v.LessThanOrEqual(a)
+}
+
+func DecimalSubRoundDown8Str(a, b string) (string, error) {
+	r, err := DecimalSubStr(a, b)
+	if nil != err {
+		return "", err
+	}
+	return r.RoundDown(8).String(), nil
+}
+
+func DecimalSubStr(a, b string) (decimal.Decimal, error) {
+	c, err := decimal.NewFromString(a)
+	if nil != err {
+		return c, err
+	}
+	d, err := decimal.NewFromString(b)
+	if nil != err {
+		return d, err
+	}
+	res := c.Sub(d)
+	return res, nil
+}
+
+func DecimalAddRoundDown8Str(a, b string) (string, error) {
+	r, err := DecimalAddStr(a, b)
+	if nil != err {
+		return "", err
+	}
+	return r.RoundDown(8).String(), nil
+}
+
+func DecimalAddStr(a, b string) (decimal.Decimal, error) {
+	c, err := decimal.NewFromString(a)
+	if nil != err {
+		return c, err
+	}
+	d, err := decimal.NewFromString(b)
+	if nil != err {
+		return d, err
+	}
+	res := c.Add(d)
+	return res, nil
+}
+
+// DecimalDivRoundDown8Str a/b = .8_0 string
+func DecimalDivRoundDown8Str(a, b string) (string, error) {
 	c, err := decimal.NewFromString(a)
 	if nil != err {
 		return "", err
@@ -13,7 +80,7 @@ func DecimalDivRoundStr(a, b string) (string, error) {
 		return "", err
 	}
 
-	result := c.Div(d).Round(8)
+	result := c.Div(d).RoundDown(8)
 	return result.String(), nil
 }
 
