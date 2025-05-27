@@ -59,3 +59,15 @@ func TestDivRoundStr(t *testing.T) {
 	t.Log(DecimalAddRoundDown8Str(val, "1"))
 	t.Log(DecimalSubRoundDown8Str(val, "1"))
 }
+
+func TestDecimalPanic(t *testing.T) {
+	t.Log(DecimalPanic("1"))
+	t.Log(DecimalPanic("0"))
+	t.Log(DecimalPanic("0.1"))
+
+	t.Log(DecimalPanic("0xa"))
+	t.Log(DecimalPanic("0x1"))
+	t.Log(DecimalPanic("0x05"))
+	t.Log(DecimalPanic("0x"))
+
+}

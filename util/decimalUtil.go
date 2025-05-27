@@ -1,6 +1,35 @@
 package util
 
-import "github.com/shopspring/decimal"
+import (
+	"errors"
+	"github.com/shopspring/decimal"
+	"math/big"
+	"strings"
+)
+
+func DecimalErr(val string) (decimal.Decimal, error) {
+	if strings.HasPrefix(val, "0x") {
+		val = val[2:]
+		v, isOk := new(big.Int).SetString(val, 16)
+		if !isOk {
+			return decimal.Zero, errors.New("0x val error")
+		}
+		return decimal.NewFromBigInt(v, 0), nil
+	}
+	d, err := decimal.NewFromString(val)
+	if nil != err {
+		return decimal.Zero, err
+	}
+	return d, nil
+}
+
+func DecimalPanic(val string) decimal.Decimal {
+	v, err := DecimalErr(val)
+	if nil != err {
+		panic(err)
+	}
+	return v
+}
 
 func DecimalToP0Str(a decimal.Decimal) string {
 	return a.RoundDown(0).String()
