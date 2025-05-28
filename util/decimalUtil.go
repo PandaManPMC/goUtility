@@ -147,6 +147,14 @@ func DecimalGreaterThanOrEqualStr(a, b string) (bool, error) {
 	return false, nil
 }
 
+func DecimalLessThanStrPanic(a, b string) bool {
+	isLess, err := DecimalLessThanStr(a, b)
+	if nil != err {
+		panic(err)
+	}
+	return isLess
+}
+
 func DecimalLessThanStr(a, b string) (bool, error) {
 	c, err := DecimalErr(a)
 	if nil != err {

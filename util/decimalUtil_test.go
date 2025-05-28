@@ -71,3 +71,13 @@ func TestDecimalPanic(t *testing.T) {
 	t.Log(DecimalPanic("0x"))
 
 }
+
+func TestDecimalLessThanStrPanic(t *testing.T) {
+	t.Log("-----------")
+	t.Log(DecimalLessThanStrPanic("1", "0"))
+	t.Log(DecimalLessThanStrPanic("109", "9"))
+	t.Log(DecimalLessThanStrPanic("0", "10"))
+	t.Log(DecimalLessThanStrPanic("0xa", "1"))
+	t.Log(DecimalLessThanStrPanic("0x1", "0xa"))
+	t.Log(DecimalLessThanStrPanic("d", "10"))
+}
