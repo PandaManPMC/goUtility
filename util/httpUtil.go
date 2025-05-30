@@ -155,7 +155,7 @@ func (*httpUtil) Post(url string, data []byte, header map[string]string) ([]byte
 	}
 
 	if http.StatusOK != resp.StatusCode {
-		return nil, errors.New(fmt.Sprintf("StatusCode=%d", resp.StatusCode))
+		return body, errors.New(fmt.Sprintf("StatusCode=%d", resp.StatusCode))
 	}
 
 	return body, nil
