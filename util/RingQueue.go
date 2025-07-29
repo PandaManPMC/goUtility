@@ -24,6 +24,14 @@ func (that *RingQueue) Data() []interface{} {
 	return that.data
 }
 
+func (that *RingQueue) Size() int {
+	return that.size
+}
+
+func (that *RingQueue) Capacity() int {
+	return that.capacity
+}
+
 // Enqueue 入队，满了会覆盖最旧的
 func (that *RingQueue) Enqueue(val interface{}) {
 	that.mu.Lock()
