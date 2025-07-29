@@ -36,9 +36,9 @@ func (that *randomUtil) RandCrypto(num int) string {
 // num int 指定生成字符数量
 func (that *randomUtil) RandCharacterString(num int) string {
 	str := strings.Builder{}
-	max := len(that.chaArr)
+	max_ := len(that.chaArr)
 	for i := 0; i < num; i++ {
-		result, _ := rand.Int(rand.Reader, big.NewInt(int64(max)))
+		result, _ := rand.Int(rand.Reader, big.NewInt(int64(max_)))
 		str.WriteString(that.chaArr[result.Int64()])
 	}
 	return str.String()
