@@ -74,12 +74,15 @@ func (that *RingQueue) Values() []interface{} {
 }
 
 // View 返回一个只读视图
-func (that *RingQueue) View(f func(i int, v interface{})) {
+// f func(i int, v interface{}) bool 返回 false 则不再继续遍历提供视图，view 找到需要的参数后应该 return false 结束无意义的遍历
+func (that *RingQueue) View(f func(index int, value interface{}) bool) {
 	that.mu.RLock()
 	defer that.mu.RUnlock()
 
 	for i := 0; i < that.size; i++ {
-		f(i, that.data[(that.head+i)%that.capacity])
+		if !f(i, that.data[(that.head+i)%that.capacity]) {
+			break
+		}
 	}
 }
 

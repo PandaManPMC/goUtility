@@ -35,8 +35,9 @@ func TestRingQueue(t *testing.T) {
 	fmt.Println("Oldest:", oldest)
 	fmt.Println("Latest:", latest)
 
-	q.View(func(i int, v interface{}) {
+	q.View(func(i int, v interface{}) bool {
 		t.Log(i, "::", v)
+		return true
 	})
 
 	t.Log(q.Data())
