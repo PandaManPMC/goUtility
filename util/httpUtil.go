@@ -59,7 +59,7 @@ func GetInstanceByHttpUtil() *httpUtil {
 //}
 
 // GetRequestIp 获取客户端 ip，绕过代理，会去除端口号
-func (*httpUtil) GetRequestIp(req http.Header) string {
+func (*httpUtil) GetRequestIp(req *http.Request) string {
 	ip := func(req http.Header) string {
 		// 优先使用 X-Forwarded-For
 		fIp := req.Get("X-Forwarded-For")
@@ -107,7 +107,7 @@ func (*httpUtil) GetRequestIp(req http.Header) string {
 		}
 
 		return req.Get("RemoteAddr")
-	}(req)
+	}(req.Header)
 
 	return strings.ReplaceAll(ip, " ", "")
 }
