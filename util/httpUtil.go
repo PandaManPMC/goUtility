@@ -109,6 +109,16 @@ func (*httpUtil) GetRequestIp(req *http.Request) string {
 		return req.Get("RemoteAddr")
 	}(req.Header)
 
+	if "" == ip {
+		ip = req.RemoteAddr
+		if strings.HasPrefix(ip, "[::") {
+			ip = "127.0.0.1"
+		}
+		if strings.Contains(ip, ":") {
+			ip = strings.Split(ip, ":")[0]
+		}
+	}
+
 	return strings.ReplaceAll(ip, " ", "")
 }
 
