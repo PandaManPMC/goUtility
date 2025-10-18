@@ -10,6 +10,15 @@ import (
 	"time"
 )
 
+func TestRandAddress(t *testing.T) {
+	fmt.Println("ETH :", RandomETH())
+	fmt.Println("SOL :", RandomSOL())
+	fmt.Println("DOGE:", RandomDOGE())
+	fmt.Println("LTC :", RandomLTC())
+	fmt.Println("RVN :", RandomRVN())
+	fmt.Println("TRX :", RandomTRX())
+}
+
 func TestRandNumber(t *testing.T) {
 	random := GetInstanceByRandomUtil()
 	for i := 0; i < 100; i++ {

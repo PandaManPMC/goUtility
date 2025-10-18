@@ -88,12 +88,3 @@ func RandomTRX() string {
 	full := append(data, checksum...)
 	return base58Encode(full)
 }
-
-//func test() {
-//	fmt.Println("ETH :", RandomETH())
-//	fmt.Println("SOL :", RandomSOL())
-//	fmt.Println("DOGE:", RandomDOGE())
-//	fmt.Println("LTC :", RandomLTC())
-//	fmt.Println("RVN :", RandomRVN())
-//	fmt.Println("TRX :", RandomTRX())
-//}
