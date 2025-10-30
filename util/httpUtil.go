@@ -331,7 +331,7 @@ func (*httpUtil) PostClient(u string, header map[string]string, inBody []byte,
 const ERRORByRefMethodIsValidErr = "!refMethod.IsValid"
 const ERRORByRequestParams = "RequestParams"
 
-func (that *httpUtil) HandlerFun(instance any, methodName string, logError func(string, error)) func(writer http.ResponseWriter, request *http.Request) {
+func (that *httpUtil) HandlerFun(instance any, methodName string, logError func(http.ResponseWriter, *http.Request, string, error)) func(writer http.ResponseWriter, request *http.Request) {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		refValue := reflect.ValueOf(instance)
 		var refMethod reflect.Value
@@ -342,7 +342,7 @@ func (that *httpUtil) HandlerFun(instance any, methodName string, logError func(
 
 		if !refMethod.IsValid() {
 			if nil != logError {
-				logError(ERRORByRefMethodIsValidErr, errors.New(ERRORByRefMethodIsValidErr))
+				logError(writer, request, ERRORByRefMethodIsValidErr, errors.New(ERRORByRefMethodIsValidErr))
 			}
 			return
 		}
@@ -354,7 +354,7 @@ func (that *httpUtil) HandlerFun(instance any, methodName string, logError func(
 		if 0 != numIn {
 			if err := that.RequestParams(writer, request, &methodParams, refMtdType); nil != err {
 				if nil != logError {
-					logError(ERRORByRequestParams, err)
+					logError(writer, request, ERRORByRequestParams, err)
 				}
 				return
 			}
