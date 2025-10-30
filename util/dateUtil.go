@@ -44,9 +44,11 @@ func (*dateUtil) IsToday(unix int64) bool {
 
 // TodayUnix 今天 0 点 0 时 时间戳（本地时区 time.Local）
 func (*dateUtil) TodayUnix() uint64 {
-	s := time.Now().Format(DateFormat_yyyy_MM_dd)
-	n, _ := time.ParseInLocation(DateFormat_yyyy_MM_dd, s, time.Local)
-	return uint64(n.Unix())
+	now := time.Now()
+	// 截断到天级别，获取当天 0 点
+	today := now.Truncate(24 * time.Hour)
+	timestamp := today.Unix()
+	return uint64(timestamp)
 }
 
 // AddDay0OClockUnix 增加 days 的天数的0点 unix 时间
