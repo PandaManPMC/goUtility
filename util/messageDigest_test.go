@@ -62,3 +62,7 @@ func TestMD5Sig(t *testing.T) {
 	t.Log(strings.ToUpper(GetInstanceByMessageDigest().MD5("aaaa1111")))
 
 }
+
+func TestKeccak256(t *testing.T) {
+	t.Log(GetInstanceByMessageDigest().Keccak256("abc"))
+}

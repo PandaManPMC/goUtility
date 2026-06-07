@@ -9,6 +9,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"golang.org/x/crypto/sha3"
 	"io"
 	"log"
 )
@@ -98,6 +99,13 @@ func (*messageDigest) Sha256Buf(plaintext string) []byte {
 	m := sha256.New()
 	m.Write([]byte(plaintext))
 	return m.Sum(nil)
+}
+
+// Keccak256 加密(Ethereum/BSC兼容)
+func (that *messageDigest) Keccak256(plaintext string) string {
+	h := sha3.NewLegacyKeccak256()
+	h.Write([]byte(plaintext))
+	return hex.EncodeToString(h.Sum(nil))
 }
 
 func (that *messageDigest) HmacSha256(data string, secret []byte) string {
