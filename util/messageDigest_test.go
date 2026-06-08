@@ -64,5 +64,5 @@ func TestMD5Sig(t *testing.T) {
 }
 
 func TestKeccak256(t *testing.T) {
-	t.Log(GetInstanceByMessageDigest().Keccak256("abc"))
+	t.Log(GetInstanceByMessageDigest().Keccak256Hex("abc"))
 }

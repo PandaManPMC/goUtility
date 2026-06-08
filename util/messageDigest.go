@@ -101,11 +101,17 @@ func (*messageDigest) Sha256Buf(plaintext string) []byte {
 	return m.Sum(nil)
 }
 
-// Keccak256 加密(Ethereum/BSC兼容)
-func (that *messageDigest) Keccak256(plaintext string) string {
+// Keccak256Hex 加密(Ethereum/BSC兼容)
+func (that *messageDigest) Keccak256Hex(plaintext string) string {
 	h := sha3.NewLegacyKeccak256()
 	h.Write([]byte(plaintext))
 	return hex.EncodeToString(h.Sum(nil))
+}
+
+func (that *messageDigest) Keccak256(plaintext string) []byte {
+	h := sha3.NewLegacyKeccak256()
+	h.Write([]byte(plaintext))
+	return h.Sum(nil)
 }
 
 func (that *messageDigest) HmacSha256(data string, secret []byte) string {
