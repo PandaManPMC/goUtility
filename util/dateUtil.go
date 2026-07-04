@@ -330,3 +330,11 @@ func (*dateUtil) HourList(isToday bool) []string {
 	}
 	return hourLst
 }
+
+// IsInRangeHourMinute t 在指定的 hour 的 beginMinute >= t.h.m <= endMinute 之间，则 return true
+func (*dateUtil) IsInRangeHourMinute(t time.Time, hour int, beginMinute, endMinute int) bool {
+	nowHour := t.Hour()
+	nowMinute := t.Minute()
+
+	return nowHour == hour && nowMinute >= beginMinute && nowMinute <= endMinute
+}
