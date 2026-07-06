@@ -54,15 +54,11 @@ func DecimalNewFromStringPanic(a string) decimal.Decimal {
 }
 
 func DecimalIsZero(a decimal.Decimal) bool {
-	if "0" == a.String() {
-		return true
-	}
-	return false
+	return a.Equal(decimal.Zero)
 }
 
 func DecimalLessOrEquZero(a decimal.Decimal) bool {
-	v := DecimalNewFromStringMust("0")
-	return a.LessThanOrEqual(v)
+	return a.LessThanOrEqual(decimal.Zero)
 }
 
 func DecimalSubRoundDown8Str(a, b string) (string, error) {
@@ -195,4 +191,28 @@ func DecimalLessThanOrEqualStr(a, b string) (bool, error) {
 	}
 
 	return false, nil
+}
+
+// DecimalNewFromStringByPositive val 不能是负数
+func DecimalNewFromStringByPositive(val string) (decimal.Decimal, error) {
+	d, err := decimal.NewFromString(val)
+	if nil != err {
+		return d, err
+	}
+	if d.LessThan(decimal.Zero) {
+		return d, errors.New("parsing failed")
+	}
+	return d, nil
+}
+
+// DecimalNewFromStringByPositiveAndNoZero val 不能是负数、0
+func DecimalNewFromStringByPositiveAndNoZero(val string) (decimal.Decimal, error) {
+	d, err := DecimalNewFromStringByPositive(val)
+	if nil != err {
+		return d, err
+	}
+	if d.Equal(decimal.Zero) {
+		return d, errors.New("val is zero")
+	}
+	return d, nil
 }

@@ -81,3 +81,18 @@ func TestDecimalLessThanStrPanic(t *testing.T) {
 	t.Log(DecimalLessThanStrPanic("0x1", "0xa"))
 	t.Log(DecimalLessThanStrPanic("d", "10"))
 }
+
+func TestDecimalNewFromStringByPositiveAndNoZero(t *testing.T) {
+	t.Log(DecimalNewFromStringByPositiveAndNoZero("1"))
+	t.Log(DecimalNewFromStringByPositiveAndNoZero("0.2"))
+	t.Log(DecimalNewFromStringByPositiveAndNoZero("0"))
+	t.Log(DecimalNewFromStringByPositiveAndNoZero("-1"))
+
+	t.Log("///////////////////")
+
+	t.Log(DecimalNewFromStringByPositive("1"))
+	t.Log(DecimalNewFromStringByPositive("0.2"))
+	t.Log(DecimalNewFromStringByPositive("0"))
+	t.Log(DecimalNewFromStringByPositive("-1"))
+
+}
