@@ -117,9 +117,10 @@ func (*httpUtil) GetRequestIp(req *http.Request) string {
 		if strings.HasPrefix(ip, "[::") {
 			ip = "127.0.0.1"
 		}
-		if strings.Contains(ip, ":") {
-			ip = strings.Split(ip, ":")[0]
-		}
+	}
+
+	if strings.Contains(ip, ":") {
+		ip = strings.Split(ip, ":")[0]
 	}
 
 	return strings.ReplaceAll(ip, " ", "")
