@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/mssola/useragent"
 	"io"
+	"net"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -23,107 +24,77 @@ func GetInstanceByHttpUtil() *httpUtil {
 	return &httpUtilInstance
 }
 
-// GetRequestIp 获取客户端 ip，绕过代理，会去除端口号
-//func (*httpUtil) GetRequestIp(req *http.Request) string {
-//	ip := func(req *http.Request) string {
-//		// 优先使用 X-Forwarded-For
-//		fIp := req.Header.Get("X-Forwarded-For")
-//		if "" != fIp && !strings.Contains(fIp, "[") {
-//			// x.x.x.x,xx.xx.x.x,x.x.x.xx ...
-//			if strings.Contains(fIp, ",") {
-//				ips := strings.Split(fIp, ",")
-//				return ips[0]
-//			}
-//			return fIp
-//		}
-//
-//		rIp := req.RemoteAddr
-//		// RemoteAddr=[::1] or 127.0.0.1
-//		if "" != rIp && !strings.Contains(rIp, "[") && !strings.HasPrefix(rIp, "127.") {
-//			return rIp
-//		}
-//
-//		xIp := req.Header.Get("X-Real-IP")
-//		if "" != xIp && !strings.Contains(xIp, "[") {
-//			return xIp
-//		}
-//
-//		remoteAddr := req.Header.Get("Remote_addr")
-//		if "" != remoteAddr && !strings.Contains(remoteAddr, "[") {
-//			return remoteAddr
-//		}
-//
-//		return req.RemoteAddr
-//	}(req)
-//	if strings.Contains(ip, ":") {
-//		return strings.Split(ip, ":")[0]
-//	}
-//	return strings.Trim(ip, " ")
-//}
-
-// GetRequestIp 获取客户端 ip，绕过代理，会去除端口号
+// GetRequestIp 获取客户端 IP，绕过代理，会去除端口号
 func (*httpUtil) GetRequestIp(req *http.Request) string {
-	ip := func(req http.Header) string {
+	ip := func(header http.Header) string {
 		// 优先使用 X-Forwarded-For
-		fIp := req.Get("X-Forwarded-For")
-		if "" != fIp {
-			if strings.Contains(fIp, "[") {
-				fIp = strings.ReplaceAll(fIp, "[", "")
-				fIp = strings.ReplaceAll(fIp, "]", "")
-			}
-
-			// x.x.x.x,xx.xx.x.x,x.x.x.xx ...
+		fIp := header.Get("X-Forwarded-For")
+		if fIp != "" {
+			// X-Forwarded-For:
+			// 1.2.3.4, 5.6.7.8
+			// 2607:f358:1a:e::be81:2b37, 2607:f358:...
 			if strings.Contains(fIp, ",") {
-				ips := strings.Split(fIp, ",")
-				return strings.TrimSpace(ips[0])
+				fIp = strings.TrimSpace(strings.Split(fIp, ",")[0])
 			}
-			return strings.TrimSpace(fIp)
+
+			return cleanIP(fIp)
 		}
 
-		rIp := req.Get("RemoteAddr")
-		if strings.Contains(rIp, "[") {
-			rIp = strings.ReplaceAll(rIp, "[", "")
-			rIp = strings.ReplaceAll(rIp, "]", "")
+		// X-Real-IP
+		xIp := header.Get("X-Real-IP")
+		if xIp != "" {
+			return cleanIP(xIp)
 		}
 
-		// RemoteAddr=[::1] or 127.0.0.1
-		if "" != rIp && !strings.HasPrefix(rIp, "127.") {
-			return rIp
+		// RemoteAddr
+		rIp := header.Get("RemoteAddr")
+		if rIp != "" && !strings.HasPrefix(rIp, "127.") {
+			return cleanIP(rIp)
 		}
 
-		xIp := req.Get("X-Real-IP")
-		if strings.Contains(xIp, "[") {
-			xIp = strings.ReplaceAll(xIp, "[", "")
-			xIp = strings.ReplaceAll(xIp, "]", "")
-		}
-		if "" != xIp {
-			return xIp
+		// Remote_addr
+		remoteAddr := header.Get("Remote_addr")
+		if remoteAddr != "" {
+			return cleanIP(remoteAddr)
 		}
 
-		remoteAddr := req.Get("Remote_addr")
-		if strings.Contains(remoteAddr, "[") {
-			remoteAddr = strings.ReplaceAll(remoteAddr, "[", "")
-			remoteAddr = strings.ReplaceAll(remoteAddr, "]", "")
-		}
-		if "" != remoteAddr {
-			return remoteAddr
-		}
-
-		return req.Get("RemoteAddr")
+		return ""
 	}(req.Header)
 
-	if "" == ip {
-		ip = req.RemoteAddr
-		if strings.HasPrefix(ip, "[::") {
-			ip = "127.0.0.1"
-		}
+	if ip == "" {
+		ip = cleanIP(req.RemoteAddr)
 	}
 
-	if strings.Contains(ip, ":") {
-		ip = strings.Split(ip, ":")[0]
+	// 本地 IPv6 ::1 可以按照你的业务需求转换
+	if ip == "::1" {
+		return "127.0.0.1"
 	}
 
-	return strings.ReplaceAll(ip, " ", "")
+	return ip
+}
+
+// cleanIP 清理 IP 地址，去除端口号
+func cleanIP(ip string) string {
+	ip = strings.TrimSpace(ip)
+
+	if ip == "" {
+		return ""
+	}
+
+	// [2607:f358:1a:e::be81:2b37]:8080
+	if host, _, err := net.SplitHostPort(ip); err == nil {
+		return host
+	}
+
+	// [2607:f358:1a:e::be81:2b37]
+	if strings.HasPrefix(ip, "[") && strings.HasSuffix(ip, "]") {
+		return strings.TrimSuffix(strings.TrimPrefix(ip, "["), "]")
+	}
+
+	// 纯 IP：
+	// 127.0.0.1
+	// 2607:f358:1a:e::be81:2b37
+	return ip
 }
 
 // UserAgent 解析 userAgent
