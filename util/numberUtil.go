@@ -363,3 +363,10 @@ func (instance *numberUtil) BytesToUint64(b []byte) uint64 {
 	}
 	return binary.BigEndian.Uint64(b)
 }
+
+func (instance *numberUtil) ToDefault(v *int) int {
+	if nil != v {
+		return *v
+	}
+	return 0
+}
