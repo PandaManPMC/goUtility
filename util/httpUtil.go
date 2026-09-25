@@ -336,11 +336,34 @@ func (that *httpUtil) HandlerFun(instance any, methodName string, logError func(
 		if nil != result && 0 < len(result) {
 			rsu := result[0]
 			switch rsu.Kind() {
-			case reflect.Struct, reflect.Map, reflect.Slice:
+			case reflect.Struct:
+				// 优先尝试 Bytes() []byte
+				bytesMethod := rsu.MethodByName("Bytes")
+
+				// 如果 Struct 的 Bytes() 是指针接收者
+				if !bytesMethod.IsValid() && rsu.CanAddr() {
+					bytesMethod = rsu.Addr().MethodByName("Bytes")
+				}
+
+				if bytesMethod.IsValid() {
+					bytesResult := bytesMethod.Call(nil)
+
+					if len(bytesResult) > 0 && bytesResult[0].Kind() == reflect.Slice {
+						if b, ok := bytesResult[0].Interface().([]byte); ok {
+							_, _ = writer.Write(b)
+							return
+						}
+					}
+				}
+
+				// 没有 Bytes()，走 JSON
 				marshalData, _ := json.Marshal(rsu.Interface())
-				writer.Write(marshalData)
+				_, _ = writer.Write(marshalData)
+			case reflect.Map, reflect.Slice:
+				marshalData, _ := json.Marshal(rsu.Interface())
+				_, _ = writer.Write(marshalData)
 			default:
-				writer.Write([]byte(rsu.String()))
+				_, _ = writer.Write([]byte(rsu.String()))
 			}
 		}
 
