@@ -348,9 +348,31 @@ func (that *httpUtil) HandlerFun(instance any, methodName string, logError func(
 				if bytesMethod.IsValid() {
 					bytesResult := bytesMethod.Call(nil)
 
+					// 有 Bytes()，继续检查 ContentType()
+					contentTypeMethod := rsu.MethodByName("ContentType")
+					if !contentTypeMethod.IsValid() && rsu.CanAddr() {
+						contentTypeMethod = rsu.Addr().MethodByName("ContentType")
+					}
+
+					// ContentType()
+					if contentTypeMethod.IsValid() {
+						contentTypeResult := contentTypeMethod.Call(nil)
+
+						if len(contentTypeResult) > 0 &&
+							contentTypeResult[0].Kind() == reflect.String {
+
+							writer.Header().Set(
+								"Content-Type",
+								contentTypeResult[0].String(),
+							)
+						}
+					}
+
 					if len(bytesResult) > 0 && bytesResult[0].Kind() == reflect.Slice {
 						if b, ok := bytesResult[0].Interface().([]byte); ok {
 							_, _ = writer.Write(b)
+
+							writer.Header().Set("Content-Type", "application/bson")
 							return
 						}
 					}
