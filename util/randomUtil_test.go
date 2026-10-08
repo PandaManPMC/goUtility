@@ -15,7 +15,8 @@ func TestRandNumber(t *testing.T) {
 	for i := 0; i < 100; i++ {
 		t.Log(random.RandNumber(100))
 	}
-	s := strings.ToUpper(random.RandCharacterString(320))
+	s, _ := random.RandCharacterString(320)
+	s = strings.ToUpper(s)
 	t.Log(s)
 
 	var sum uint64 = 36
@@ -26,7 +27,8 @@ func TestRandNumber(t *testing.T) {
 
 	arr := make([]int, 100)
 	for i := 0; i < len(arr); i++ {
-		arr[i] = int(random.RandNumber(100))
+		r, _ := random.RandNumber(100)
+		arr[i] = int(r)
 	}
 	t.Log(arr)
 }
@@ -80,13 +82,13 @@ func TestRandCharacterString(t *testing.T) {
 	count := 100000000
 	repeat := 0
 	for i := 0; i < count; i++ {
-		rand := GetInstanceByRandomUtil().RandCharacterString(10)
-		_, isOk := mp[rand]
+		ran, _ := GetInstanceByRandomUtil().RandCharacterString(10)
+		_, isOk := mp[ran]
 		if isOk {
 			repeat++
 			//t.Log(fmt.Sprintf("重复%s", rand))
 		}
-		mp[rand] = 1
+		mp[ran] = 1
 	}
 
 	t.Log(fmt.Sprintf("重复%d次,耗时%d", repeat, time.Now().Unix()-start))

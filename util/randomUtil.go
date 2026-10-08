@@ -2,15 +2,15 @@ package util
 
 import (
 	"crypto/rand"
-	"fmt"
 	"math/big"
 	"strings"
 )
 
 type randomUtil struct {
-	chaArr           []string
-	lowercaseLetters []string
-	uppercaseLetters []string
+	chars            string
+	lowercaseLetters string
+	uppercaseLetters string
+	numbers          string
 }
 
 var randomUtilInstance randomUtil
@@ -20,65 +20,69 @@ func GetInstanceByRandomUtil() *randomUtil {
 }
 
 func init() {
-	randomUtilInstance.chaArr = []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
-	randomUtilInstance.lowercaseLetters = []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
-	randomUtilInstance.uppercaseLetters = []string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
+	randomUtilInstance.chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	randomUtilInstance.lowercaseLetters = "abcdefghijklmnopqrstuvwxyz"
+	randomUtilInstance.uppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	randomUtilInstance.numbers = "0123456789"
+}
+
+func (that *randomUtil) randString(chars string, num int) (string, error) {
+	if num <= 0 {
+		return "", nil
+	}
+
+	var str strings.Builder
+	str.Grow(num)
+
+	max_ := big.NewInt(int64(len(chars)))
+
+	for i := 0; i < num; i++ {
+		result, err := rand.Int(rand.Reader, max_)
+		if err != nil {
+			return "", err
+		}
+
+		str.WriteByte(chars[result.Int64()])
+	}
+
+	return str.String(), nil
 }
 
 // RandCrypto 生成随机数 0-9 crypto/rand
 // num int 随机数长度
-func (that *randomUtil) RandCrypto(num int) string {
-	str := strings.Builder{}
-	for i := 0; i < num; i++ {
-		result, _ := rand.Int(rand.Reader, big.NewInt(10))
-		str.WriteString(fmt.Sprintf("%d", result))
-	}
-	return str.String()
+func (that *randomUtil) RandCrypto(num int) (string, error) {
+	return that.randString(that.numbers, num)
 }
 
 // RandCharacterString 生成 0-9 a-z A-Z 随机字符
 // num int 指定生成字符数量
-func (that *randomUtil) RandCharacterString(num int) string {
-	str := strings.Builder{}
-	max_ := len(that.chaArr)
-	for i := 0; i < num; i++ {
-		result, _ := rand.Int(rand.Reader, big.NewInt(int64(max_)))
-		str.WriteString(that.chaArr[result.Int64()])
+func (that *randomUtil) RandCharacterString(num int) (string, error) {
+	return that.randString(that.chars, num)
+}
+
+func (that *randomUtil) RandLowercaseLetters(num int) (string, error) {
+	return that.randString(that.lowercaseLetters, num)
+}
+
+func (that *randomUtil) RandUppercaseLetters(num int) (string, error) {
+	return that.randString(that.uppercaseLetters, num)
+}
+
+// RandNumber 生成 max 范围内的随机整数
+func (that *randomUtil) RandNumber(max int) (int64, error) {
+	result, err := rand.Int(rand.Reader, big.NewInt(int64(max)))
+	if nil != err {
+		return 0, err
 	}
-	return str.String()
+	return result.Int64(), nil
 }
 
-// RandNumber 生成随机数数字 max 以内
-// max int 随机数最大
-func (that *randomUtil) RandNumber(max int) int64 {
-	result, _ := rand.Int(rand.Reader, big.NewInt(int64(max)))
-	return result.Int64()
-}
-
-// RandNumberNotZero 生成随机数数字最大 max， 必定大于0的
-// max int 随机数最大( result == max || result > 0 )
-func (that *randomUtil) RandNumberNotZero(max int) int64 {
-	result, _ := rand.Int(rand.Reader, big.NewInt(int64(max)))
+// RandNumberNotZero 生成 1 ~ max 的随机整数
+func (that *randomUtil) RandNumberNotZero(max int) (int64, error) {
+	result, err := rand.Int(rand.Reader, big.NewInt(int64(max)))
+	if nil != err {
+		return 0, err
+	}
 	r := result.Int64() + 1
-	return r
-}
-
-func (that *randomUtil) RandLowercaseLetters(num int) string {
-	str := strings.Builder{}
-	max_ := len(that.lowercaseLetters)
-	for i := 0; i < num; i++ {
-		result, _ := rand.Int(rand.Reader, big.NewInt(int64(max_)))
-		str.WriteString(that.lowercaseLetters[result.Int64()])
-	}
-	return str.String()
-}
-
-func (that *randomUtil) RandUppercaseLetters(num int) string {
-	str := strings.Builder{}
-	max_ := len(that.uppercaseLetters)
-	for i := 0; i < num; i++ {
-		result, _ := rand.Int(rand.Reader, big.NewInt(int64(max_)))
-		str.WriteString(that.uppercaseLetters[result.Int64()])
-	}
-	return str.String()
+	return r, nil
 }
