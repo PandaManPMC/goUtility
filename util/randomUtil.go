@@ -8,7 +8,9 @@ import (
 )
 
 type randomUtil struct {
-	chaArr []string
+	chaArr           []string
+	lowercaseLetters []string
+	uppercaseLetters []string
 }
 
 var randomUtilInstance randomUtil
@@ -19,6 +21,8 @@ func GetInstanceByRandomUtil() *randomUtil {
 
 func init() {
 	randomUtilInstance.chaArr = []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
+	randomUtilInstance.lowercaseLetters = []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
+	randomUtilInstance.uppercaseLetters = []string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
 }
 
 // RandCrypto 生成随机数 0-9 crypto/rand
@@ -57,4 +61,24 @@ func (that *randomUtil) RandNumberNotZero(max int) int64 {
 	result, _ := rand.Int(rand.Reader, big.NewInt(int64(max)))
 	r := result.Int64() + 1
 	return r
+}
+
+func (that *randomUtil) RandLowercaseLetters(num int) string {
+	str := strings.Builder{}
+	max_ := len(that.lowercaseLetters)
+	for i := 0; i < num; i++ {
+		result, _ := rand.Int(rand.Reader, big.NewInt(int64(max_)))
+		str.WriteString(that.lowercaseLetters[result.Int64()])
+	}
+	return str.String()
+}
+
+func (that *randomUtil) RandUppercaseLetters(num int) string {
+	str := strings.Builder{}
+	max_ := len(that.uppercaseLetters)
+	for i := 0; i < num; i++ {
+		result, _ := rand.Int(rand.Reader, big.NewInt(int64(max_)))
+		str.WriteString(that.uppercaseLetters[result.Int64()])
+	}
+	return str.String()
 }
