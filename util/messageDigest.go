@@ -101,6 +101,12 @@ func (*messageDigest) Sha256Buf(plaintext string) []byte {
 	return m.Sum(nil)
 }
 
+func (*messageDigest) Sha256B2B(data []byte) []byte {
+	m := sha256.New()
+	m.Write(data)
+	return m.Sum(nil)
+}
+
 // Keccak256Hex 加密(Ethereum/BSC兼容)
 func (that *messageDigest) Keccak256Hex(plaintext string) string {
 	h := sha3.NewLegacyKeccak256()
